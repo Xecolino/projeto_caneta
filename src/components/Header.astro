@@ -1,0 +1,158 @@
+---
+// Header.astro
+---
+<header class="nav" id="mainNav">
+    <nav class="nav-inner">
+        <!-- Brand -->
+        <div class="nav-brand">
+            <div class="nav-brand-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span>ARTOOLS</span>
+        </div>
+
+        <!-- Links -->
+        <ul class="nav-links">
+            <li><a href="/" class="nav-item" onclick="document.getElementById('notify-modal')?.classList.add('active');">INÍCIO</a></li>
+            <li><a href="/nova-pagina" class="nav-item" onclick="document.getElementById('notify-modal')?.classList.add('active');">CATÁLAGO</a></li>
+            <li><a href="#beneficios" class="nav-item" onclick="document.getElementById('notify-modal')?.classList.add('active');">DETALHES DO PRODUTO</a></li>
+        </ul>
+
+        <!-- Theme Toggle -->
+        <button class="nav-theme-toggle" aria-label="Alternar tema">
+            <iconify-icon icon="solar:sun-line-duotone" style="font-size: 1.125rem; color: var(--text-secondary);"></iconify-icon>
+        </button>
+    </nav>
+</header>
+
+<style>
+    /* =============================================
+       NAVIGATION
+    ============================================= */
+    .nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border-bottom: 1px solid var(--border-light);
+        opacity: 0;
+        transform: translateY(-10px);
+        transition: all 0.8s var(--easing-smooth);
+    }
+
+    .nav.loaded {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .nav-inner {
+        max-width: 1400px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+    }
+
+    .nav-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .nav-brand-icon {
+        width: 28px;
+        height: 28px;
+        background: var(--primary-dark);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .nav-brand-icon svg {
+        width: 16px;
+        height: 16px;
+        fill: white;
+    }
+
+    .nav-brand span {
+        font-weight: 700;
+        font-size: 1.125rem;
+        letter-spacing: -0.03em;
+        color: var(--text-primary);
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2.5rem;
+        list-style: none;
+    }
+
+    .nav-links a {
+        font-size: 0.75rem;
+        font-weight: 500;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-secondary);
+        transition: color 0.3s ease;
+        position: relative;
+    }
+
+    .nav-links a::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--text-primary);
+        transition: width 0.4s var(--easing-smooth);
+    }
+
+    .nav-links a:hover {
+        color: var(--text-primary);
+    }
+
+    .nav-links a:hover::after {
+        width: 100%;
+    }
+
+    .nav-theme-toggle {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-full);
+        border: 1px solid var(--border-light);
+        background: var(--bg-main);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .nav-theme-toggle:hover {
+        background: var(--bg-surface);
+        border-color: var(--border-medium);
+    }
+
+    @media (max-width: 1024px) {
+        .nav-links {
+            display: none;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .nav-inner {
+            padding: 0.875rem 1.25rem;
+        }
+    }
+</style>

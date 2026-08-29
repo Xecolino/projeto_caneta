@@ -1,0 +1,26 @@
+---
+// src/components/VideoStrip.astro
+---
+<section class="video-strip">
+    <video class="strip-video" autoplay muted loop playsinline>
+        <source src="files/video-1787256727561.mp4" type="video/mp4" />
+    </video>
+</section>
+
+<style>
+    .video-strip {
+        position: relative;
+        width: 100%;
+        /* The marquee is about 100px tall. 50% larger = 150px */
+        height: 150px; 
+        overflow: hidden;
+        display: block;
+    }
+
+    .strip-video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+</style>

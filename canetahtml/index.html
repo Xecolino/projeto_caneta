@@ -1,12 +1,3 @@
----
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import Button from '../components/Button.astro';
-import BenefitCard from '../components/BenefitCard.astro';
-import Marquee from '../components/Marquee.astro';
-import VideoStrip from '../components/VideoStrip.astro';
-import SpecsTable from '../components/SpecsTable.astro';
----
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
 
@@ -20,14 +11,13 @@ import SpecsTable from '../components/SpecsTable.astro';
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
 
     <!-- GSAP + ScrollTrigger via CDN -->
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
     <!-- Iconify for icons (from Design System) -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
 
     <style>
         /* =============================================
@@ -1550,7 +1540,31 @@ import SpecsTable from '../components/SpecsTable.astro';
     <!-- ========================================
          NAVIGATION
     ========================================= -->
-    <Header />
+    <header class="nav" id="mainNav">
+        <nav class="nav-inner">
+            <!-- Brand -->
+            <div class="nav-brand">
+                <div class="nav-brand-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <span>ARTOOLS</span>
+            </div>
+
+            <!-- Links -->
+            <ul class="nav-links">
+                <li><a href="#hero">Produto</a></li>
+                <li><a href="#video">Tecnologia</a></li>
+                <li><a href="#benefits">Benefícios</a></li>
+            </ul>
+
+            <!-- Theme Toggle -->
+            <button class="nav-theme-toggle" aria-label="Alternar tema">
+                <iconify-icon icon="solar:sun-line-duotone" style="font-size: 1.125rem; color: var(--text-secondary);"></iconify-icon>
+            </button>
+        </nav>
+    </header>
 
     <!-- ========================================
          HERO SECTION
@@ -1587,13 +1601,13 @@ import SpecsTable from '../components/SpecsTable.astro';
 
                 <!-- CTA Buttons -->
                 <div class="hero-buttons reveal delay-500">
-                    <Button variant="primary" id="btnBuy">
+                    <button class="btn-primary" id="btnBuy">
                         <span>Comprar Agora</span>
-                    </Button>
-                    <Button variant="secondary" id="btnExplore">
+                    </button>
+                    <button class="btn-secondary" id="btnExplore">
                         <span>Explorar</span>
                         <iconify-icon icon="solar:arrow-down-line-duotone" class="btn-icon" style="font-size: 1.125rem;"></iconify-icon>
-                    </Button>
+                    </button>
                 </div>
             </div>
 
@@ -1606,11 +1620,11 @@ import SpecsTable from '../components/SpecsTable.astro';
                     </div>
 
                     <!-- Play Button -->
-                    <Button variant="play" class="reveal delay-600" id="heroPlayBtn" ariaLabel="Assistir vídeo do produto">
+                    <button class="hero-play-btn reveal delay-600" id="heroPlayBtn" aria-label="Assistir vídeo do produto">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <polygon points="6,4 20,12 6,20" />
                         </svg>
-                    </Button>
+                    </button>
 
                     <!-- Prev Indicator -->
                     <div class="hero-prev reveal delay-700">
@@ -1707,24 +1721,60 @@ import SpecsTable from '../components/SpecsTable.astro';
                 <div class="benefits-features">
 
                     <!-- Feature 01 -->
-                    <BenefitCard number="01" dataBenefit="1" title="Engenharia Suíça" badge="Swiss Made">
-                        Mecanismo interno calibrado em <span class="benefit-highlight">Zurique</span> com tolerância de <span class="benefit-highlight">±0.01mm</span>. Cada componente passa por 47 etapas de inspeção antes da montagem final.
-                    </BenefitCard>
+                    <div class="benefit-card" data-benefit="1">
+                        <div class="benefit-number">01</div>
+                        <div class="benefit-info">
+                            <h3 class="benefit-name">
+                                Engenharia Suíça
+                                <span class="benefit-badge">Swiss Made</span>
+                            </h3>
+                            <p class="benefit-desc">
+                                Mecanismo interno calibrado em <span class="benefit-highlight">Zurique</span> com tolerância de <span class="benefit-highlight">±0.01mm</span>. Cada componente passa por 47 etapas de inspeção antes da montagem final.
+                            </p>
+                        </div>
+                    </div>
 
                     <!-- Feature 02 -->
-                    <BenefitCard number="02" dataBenefit="2" title="Alumínio Aeroespacial" badge="AL-7075">
-                        Corpo usinado em <span class="benefit-highlight">alumínio 7075-T6</span> — a mesma liga usada em fuselagens de aeronaves. Ultraleve (<span class="benefit-highlight">12g</span>), com rigidez estrutural 3x superior ao plástico convencional.
-                    </BenefitCard>
+                    <div class="benefit-card" data-benefit="2">
+                        <div class="benefit-number">02</div>
+                        <div class="benefit-info">
+                            <h3 class="benefit-name">
+                                Alumínio Aeroespacial
+                                <span class="benefit-badge">AL-7075</span>
+                            </h3>
+                            <p class="benefit-desc">
+                                Corpo usinado em <span class="benefit-highlight">alumínio 7075-T6</span> — a mesma liga usada em fuselagens de aeronaves. Ultraleve (<span class="benefit-highlight">12g</span>), com rigidez estrutural 3x superior ao plástico convencional.
+                            </p>
+                        </div>
+                    </div>
 
                     <!-- Feature 03 -->
-                    <BenefitCard number="03" dataBenefit="3" title="Tinta Antialérgica" badge="Dermatest®">
-                        Formulação <span class="benefit-highlight">pigmentada à base d'água</span> com certificação dermatológica. Livre de xileno, tolueno e metais pesados. Resistente a <span class="benefit-highlight">UV e água</span> após secagem.
-                    </BenefitCard>
+                    <div class="benefit-card" data-benefit="3">
+                        <div class="benefit-number">03</div>
+                        <div class="benefit-info">
+                            <h3 class="benefit-name">
+                                Tinta Antialérgica
+                                <span class="benefit-badge">Dermatest®</span>
+                            </h3>
+                            <p class="benefit-desc">
+                                Formulação <span class="benefit-highlight">pigmentada à base d'água</span> com certificação dermatológica. Livre de xileno, tolueno e metais pesados. Resistente a <span class="benefit-highlight">UV e água</span> após secagem.
+                            </p>
+                        </div>
+                    </div>
 
                     <!-- Feature 04 -->
-                    <BenefitCard number="04" dataBenefit="4" title="Ponta Nanométrica" badge="0.1mm">
-                        Agulha de <span class="benefit-highlight">aço inoxidável revestida em titânio</span> com diâmetro de 0.1mm. Sistema anti-entupimento com fluxo constante de tinta por mais de <span class="benefit-highlight">2.000 metros</span> de traço.
-                    </BenefitCard>
+                    <div class="benefit-card" data-benefit="4">
+                        <div class="benefit-number">04</div>
+                        <div class="benefit-info">
+                            <h3 class="benefit-name">
+                                Ponta Nanométrica
+                                <span class="benefit-badge">0.1mm</span>
+                            </h3>
+                            <p class="benefit-desc">
+                                Agulha de <span class="benefit-highlight">aço inoxidável revestida em titânio</span> com diâmetro de 0.1mm. Sistema anti-entupimento com fluxo constante de tinta por mais de <span class="benefit-highlight">2.000 metros</span> de traço.
+                            </p>
+                        </div>
+                    </div>
 
                 </div>
             </div>
@@ -1816,15 +1866,49 @@ import SpecsTable from '../components/SpecsTable.astro';
         </div>
     </section>
 
-    <Marquee />
-    <VideoStrip />
-    <SpecsTable />
-    <Footer />
+    <!-- ========================================
+         FOURTH FOLD — Video & Glow CTA
+    ========================================= -->
+    <section class="video-cta" id="cta">
+        <!-- Background Video -->
+        <video class="video-cta-bg" autoplay muted loop playsinline>
+            <source src="files/video-1787256727561.mp4" type="video/mp4" />
+        </video>
+        <div class="video-cta-overlay"></div>
+
+        <!-- Glow Card -->
+        <div class="cta-content flashlight-card reveal" 
+             onmousemove="const rect = this.getBoundingClientRect(); this.style.setProperty('--mouse-x', `${event.clientX - rect.left}px`); this.style.setProperty('--mouse-y', `${event.clientY - rect.top}px`);">
+            
+            <div class="flashlight-card-inner">
+                <div class="benefits-label reveal delay-100" style="margin-bottom: 1rem;">
+                    <div class="benefits-label-dot"></div>
+                    <span class="benefits-label-text" style="color: rgba(255,255,255,0.7);">O Próximo Passo</span>
+                </div>
+                
+                <h2 class="cta-title reveal delay-200">
+                    Sua assinatura.<br/>
+                    <span class="gradient-text-light">Nossa precisão.</span>
+                </h2>
+                
+                <p class="cta-subtitle reveal delay-300">
+                    Não aceite menos do que o absoluto controle. Eleve o nível do seu processo criativo com a Precision Pen.
+                </p>
+                
+                <div class="reveal delay-400">
+                    <button class="btn-cta">
+                        <span>Garantir a Minha Agora</span>
+                        <iconify-icon icon="solar:arrow-right-line-duotone" style="font-size: 1.25rem;"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- ========================================
          JAVASCRIPT
     ========================================= -->
-    <script is:inline>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('loader');
             const nav = document.getElementById('mainNav');

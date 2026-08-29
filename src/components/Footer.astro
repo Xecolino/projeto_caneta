@@ -1,0 +1,170 @@
+---
+// Footer.astro (CTA Section)
+import Button from './Button.astro';
+---
+<!-- ========================================
+     FOURTH FOLD — Video & Glow CTA
+========================================= -->
+<section class="video-cta" id="cta">
+    <!-- Background Video -->
+    <video class="video-cta-bg" autoplay muted loop playsinline>
+        <source src="files/video-1787256727561.mp4" type="video/mp4" />
+    </video>
+    <div class="video-cta-overlay"></div>
+
+    <!-- Glow Card -->
+    <div class="cta-content flashlight-card reveal" 
+         onmousemove="const rect = this.getBoundingClientRect(); this.style.setProperty('--mouse-x', `${event.clientX - rect.left}px`); this.style.setProperty('--mouse-y', `${event.clientY - rect.top}px`);">
+        
+        <div class="flashlight-card-inner">
+            <div class="benefits-label reveal delay-100" style="margin-bottom: 1rem;">
+                <div class="benefits-label-dot"></div>
+                <span class="benefits-label-text" style="color: rgba(255,255,255,0.7);">O Próximo Passo</span>
+            </div>
+            
+            <h2 class="cta-title reveal delay-200">
+                Sua assinatura.<br/>
+                <span class="gradient-text-light">Nossa precisão.</span>
+            </h2>
+            
+            <p class="cta-subtitle reveal delay-300">
+                Não aceite menos do que o absoluto controle. Eleve o nível do seu processo criativo com a Precision Pen.
+            </p>
+            
+            <div class="reveal delay-400">
+                <Button variant="cta">
+                    <span>Garantir a Minha Agora</span>
+                    <iconify-icon icon="solar:arrow-right-line-duotone" style="font-size: 1.25rem;"></iconify-icon>
+                </Button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    /* =============================================
+       FOURTH FOLD — Video CTA & Glow Effect
+    ============================================= */
+    .video-cta {
+        position: relative;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background: var(--primary-dark);
+    }
+
+    .video-cta-bg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+        opacity: 0.4;
+    }
+    
+    .video-cta-overlay {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 0%, var(--primary-dark) 100%);
+        z-index: 2;
+    }
+
+    .cta-content {
+        position: relative;
+        z-index: 10;
+        max-width: 800px;
+        width: 90%;
+        padding: 4rem;
+    }
+
+    /* Flashlight Effect */
+    .flashlight-card {
+        background: rgba(20, 20, 20, 0.4);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: var(--radius-xl);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .flashlight-card::before {
+        content: "";
+        position: absolute;
+        inset: 0px;
+        background: radial-gradient(
+            600px circle at var(--mouse-x) var(--mouse-y),
+            rgba(232, 146, 124, 0.15),
+            transparent 40%
+        );
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .flashlight-card:hover::before { 
+        opacity: 1; 
+    }
+
+    .flashlight-card-inner {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .cta-title {
+        font-size: clamp(2.5rem, 5vw, 4.5rem);
+        font-weight: 600;
+        letter-spacing: -0.04em;
+        color: white;
+        margin-bottom: 1.5rem;
+        line-height: 1.1;
+    }
+    
+    .cta-subtitle {
+        font-size: 1.125rem;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 2.5rem;
+        max-width: 500px;
+        line-height: 1.6;
+    }
+
+    .btn-cta {
+        position: relative;
+        overflow: hidden;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1.125rem 2.5rem;
+        background: white;
+        color: var(--primary-dark);
+        border: none;
+        border-radius: var(--radius-full);
+        font-family: var(--font-sans);
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.4s var(--easing-smooth);
+        box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-cta:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        background: var(--bg-surface);
+    }
+
+    @media (max-width: 640px) {
+        .cta-content {
+            padding: 3rem 1.5rem;
+        }
+    }
+</style>

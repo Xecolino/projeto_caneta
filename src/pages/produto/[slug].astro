@@ -1,0 +1,399 @@
+---
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import Button from '../../components/Button.astro';
+import StockModal from '../../components/StockModal.astro';
+
+export function getStaticPaths() {
+  const products = [
+    {
+      slug: 'classic',
+      title: 'Precision Pen Classic',
+      description: 'O equilíbrio perfeito entre design atemporal e mecânica de alta precisão. Projetada para acompanhar os pensamentos mais ágeis, esta caneta é forjada para durar gerações. Cada detalhe foi meticulosamente esculpido para proporcionar a escrita mais fluida do mundo.',
+      price: 'R$ 1.000,00',
+      badge: 'Edição Clássica',
+      imgSrc: '/pens/pen_classic_1787826098842.jpg',
+      specs: [
+        { label: 'Material', value: 'Alumínio Aeroespacial' },
+        { label: 'Mecanismo', value: 'Precisão Suíça' },
+        { label: 'Ponta', value: '0.1mm Titânio' },
+        { label: 'Peso', value: '12g' }
+      ]
+    },
+    {
+      slug: 'obsidian',
+      title: 'Precision Pen Obsidian',
+      description: 'Edição limitada com acabamento em preto fosco profundo e detalhes em titânio negro. Feita para quem busca discrição absoluta sem abrir mão do luxo extremo e da durabilidade.',
+      price: 'R$ 1.250,00',
+      badge: 'Edição Limitada',
+      imgSrc: '/pens/pen_obsidian_1787826110110.jpg',
+      specs: [
+        { label: 'Material', value: 'Titânio Negro' },
+        { label: 'Mecanismo', value: 'Precisão Suíça' },
+        { label: 'Ponta', value: '0.1mm Tungstênio' },
+        { label: 'Peso', value: '14g' }
+      ]
+    },
+    {
+      slug: 'aerospacial',
+      title: 'Precision Pen Aerospacial',
+      description: 'Corpo em alumínio 7075-T6, garantindo resistência extrema e leveza absoluta para uso diário. Projetada com as mesmas ligas utilizadas na engenharia de espaçonaves.',
+      price: 'R$ 1.150,00',
+      badge: 'Ultra Leve',
+      imgSrc: '/pens/pen_aerospace_1787826121150.jpg',
+      specs: [
+        { label: 'Material', value: 'Alumínio 7075-T6' },
+        { label: 'Mecanismo', value: 'Retrátil Magnético' },
+        { label: 'Ponta', value: '0.2mm Aço Inox' },
+        { label: 'Peso', value: '9g' }
+      ]
+    },
+    {
+      slug: 'rose-gold',
+      title: 'Precision Pen Rose Gold',
+      description: 'Sofisticação em cada traço com corpo metálico escovado e estrutura banhada a ouro rosa 18k. A verdadeira definição de joia funcional, feita para colecionadores e entusiastas.',
+      price: 'R$ 1.500,00',
+      badge: 'Colecionador',
+      imgSrc: '/pens/pen_rose_gold_1787826132162.jpg',
+      specs: [
+        { label: 'Material', value: 'Aço c/ Ouro 18k' },
+        { label: 'Mecanismo', value: 'Rotativo Suíço' },
+        { label: 'Ponta', value: '0.1mm Titânio' },
+        { label: 'Peso', value: '18g' }
+      ]
+    },
+    {
+      slug: 'executive',
+      title: 'Precision Pen Executive',
+      description: 'Desenhada para o mundo corporativo, com peso balanceado para assinaturas firmes e confortáveis. Um símbolo de status e poder na mesa de qualquer líder.',
+      price: 'R$ 1.300,00',
+      badge: 'Corporativa',
+      imgSrc: '/pens/pen_executive_1787826143191.jpg',
+      specs: [
+        { label: 'Material', value: 'Aço Inoxidável 316L' },
+        { label: 'Mecanismo', value: 'Precisão Suíça' },
+        { label: 'Ponta', value: '0.3mm Tungstênio' },
+        { label: 'Peso', value: '22g' }
+      ]
+    },
+    {
+      slug: 'sketch',
+      title: 'Precision Pen Sketch',
+      description: 'A escolha ideal para arquitetos e ilustradores, com ponta ultrafina focada no controle de traços precisos e contínuos. A ferramenta definitiva de precisão criativa.',
+      price: 'R$ 1.050,00',
+      badge: 'Para Criativos',
+      imgSrc: '/pens/pen_sketch_1787826154652.jpg',
+      specs: [
+        { label: 'Material', value: 'Alumínio Anodizado' },
+        { label: 'Mecanismo', value: 'Retrátil Macio' },
+        { label: 'Ponta', value: '0.05mm Nano' },
+        { label: 'Peso', value: '11g' }
+      ]
+    },
+    {
+      slug: 'carbon',
+      title: 'Precision Pen Carbon',
+      description: 'Construída com fibra de carbono autêntica. Estética futurista e durabilidade inigualável no uso urbano. A união perfeita entre tecnologia e design esportivo.',
+      price: 'R$ 1.450,00',
+      badge: 'Alta Performance',
+      imgSrc: '/pens/pen_carbon_1787826166186.jpg',
+      specs: [
+        { label: 'Material', value: 'Fibra de Carbono' },
+        { label: 'Mecanismo', value: 'Magnético Suíço' },
+        { label: 'Ponta', value: '0.1mm Cerâmica' },
+        { label: 'Peso', value: '8g' }
+      ]
+    },
+    {
+      slug: 'ceramic',
+      title: 'Precision Pen Ceramic',
+      description: 'Revestimento cerâmico de alta resistência contra arranhões, mantendo a aparência impecável por anos. Toque suave, macio e temperatura constante em qualquer ambiente.',
+      price: 'R$ 1.400,00',
+      badge: 'Inovação',
+      imgSrc: '/pens/pen_ceramic_1787826177035.jpg',
+      specs: [
+        { label: 'Material', value: 'Cerâmica Zircônia' },
+        { label: 'Mecanismo', value: 'Rotativo Suave' },
+        { label: 'Ponta', value: '0.2mm Titânio' },
+        { label: 'Peso', value: '16g' }
+      ]
+    },
+    {
+      slug: 'heritage',
+      title: 'Precision Pen Heritage',
+      description: 'Inspirada nos grandes clássicos, une o passado romântico da escrita ao futuro da engenharia suíça. Resgata a essência, o peso e a elegância de escrever à mão.',
+      price: 'R$ 1.200,00',
+      badge: 'Clássico Vintage',
+      imgSrc: '/pens/pen_heritage_1787826188287.jpg',
+      specs: [
+        { label: 'Material', value: 'Latão Envelhecido' },
+        { label: 'Mecanismo', value: 'Precisão Suíça' },
+        { label: 'Ponta', value: '0.3mm Aço Inox' },
+        { label: 'Peso', value: '25g' }
+      ]
+    }
+  ];
+
+  return products.map(product => {
+    return {
+      params: { slug: product.slug },
+      props: { product }
+    };
+  });
+}
+
+const { product } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{product.title} — Detalhes do Produto</title>
+
+    <!-- Google Fonts — Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    
+    <!-- Iconify for icons -->
+    <script is:inline src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
+
+    <style is:global>
+        :root {
+            --bg-main: #FFFFFF;
+            --bg-surface: #F5F5F4;
+            --bg-subtle: #FAFAFA;
+            --text-primary: #1C1C1C;
+            --text-secondary: #57534E;
+            --text-muted: #A8A29E;
+            --text-faint: #D6D3D1;
+            --border-light: #E7E5E4;
+            --border-medium: #D6D3D1;
+            --primary-dark: #1C1917;
+            --accent-warm: #E8927C;
+
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --easing-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+            
+            --radius-sm: 0.375rem;
+            --radius-md: 0.75rem;
+            --radius-lg: 1rem;
+            --radius-xl: 1.5rem;
+            --radius-full: 9999px;
+        }
+
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.025;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        /* Product Page Layout */
+        .product-page {
+            padding: 140px 2rem 8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+            min-height: calc(100vh - 120px);
+        }
+
+        .product-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .product-image-section {
+            position: sticky;
+            top: 120px;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            background: #000;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .main-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            aspect-ratio: 4/3;
+            object-fit: cover;
+        }
+
+        .product-info-section {
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 1rem;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            align-self: flex-start;
+        }
+
+        .product-title {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 600;
+            letter-spacing: -0.03em;
+            color: var(--text-primary);
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .product-price {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+        }
+
+        .product-description {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 3rem;
+            max-width: 90%;
+        }
+
+        .product-specs {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            border-top: 1px solid var(--border-light);
+            padding-top: 2.5rem;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1rem;
+        }
+
+        .spec-label {
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .spec-value {
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .product-actions {
+            margin-top: auto;
+        }
+
+        .full-width-btn {
+            width: 100%;
+            padding: 1.25rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 1024px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+            .product-image-section {
+                position: relative;
+                top: 0;
+            }
+            .product-description {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <Header />
+    
+    <main class="product-page">
+        <div class="product-container">
+            <!-- Coluna da Imagem -->
+            <div class="product-image-section">
+                <img src={product.imgSrc} alt={product.title} class="main-image" />
+            </div>
+            
+            <!-- Coluna de Informações -->
+            <div class="product-info-section">
+                <div class="badge">{product.badge}</div>
+                <h1 class="product-title">{product.title}</h1>
+                <p class="product-price">{product.price}</p>
+                
+                <p class="product-description">
+                    {product.description}
+                </p>
+
+                <div class="product-specs">
+                    {product.specs.map(spec => (
+                        <div class="spec-item">
+                            <span class="spec-label">{spec.label}</span>
+                            <span class="spec-value">{spec.value}</span>
+                        </div>
+                    ))}
+                </div>
+
+                <div class="product-actions">
+                    <Button variant="primary" class="full-width-btn" id="notify-btn">
+                        <span>Avise-me quando disponível</span>
+                    </Button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <Footer />
+
+    <StockModal productTitle={product.title} />
+
+    <script is:inline>
+        document.addEventListener('DOMContentLoaded', () => {
+            const nav = document.getElementById('mainNav');
+            if (nav) nav.classList.add('loaded');
+        });
+    </script>
+</body>
+</html>

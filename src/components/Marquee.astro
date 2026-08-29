@@ -1,0 +1,106 @@
+---
+// src/components/Marquee.astro
+---
+
+<section class="marquee-section">
+    <div class="marquee-container">
+        <!-- First group -->
+        <div class="marquee-content">
+            <span>Precisão</span>
+            <span class="dot">•</span>
+            <span>Elegância</span>
+            <span class="dot">•</span>
+            <span>Traço Perfeito</span>
+            <span class="dot">•</span>
+            <span>Fluidez</span>
+            <span class="dot">•</span>
+            <span>Assinatura</span>
+            <span class="dot">•</span>
+            <span>Design</span>
+            <span class="dot">•</span>
+            <span>Controle Absoluto</span>
+            <span class="dot">•</span>
+            <span>Performance</span>
+            <span class="dot">•</span>
+            <span>Inovação</span>
+            <span class="dot">•</span>
+        </div>
+        <!-- Second group (duplicate for infinite loop) -->
+        <div class="marquee-content">
+            <span>Precisão</span>
+            <span class="dot">•</span>
+            <span>Elegância</span>
+            <span class="dot">•</span>
+            <span>Traço Perfeito</span>
+            <span class="dot">•</span>
+            <span>Fluidez</span>
+            <span class="dot">•</span>
+            <span>Assinatura</span>
+            <span class="dot">•</span>
+            <span>Design</span>
+            <span class="dot">•</span>
+            <span>Controle Absoluto</span>
+            <span class="dot">•</span>
+            <span>Performance</span>
+            <span class="dot">•</span>
+            <span>Inovação</span>
+            <span class="dot">•</span>
+        </div>
+    </div>
+</section>
+
+<style>
+    .marquee-section {
+        background-color: #000000 !important;
+        padding: 0.5rem 0;
+        display: block;
+        width: 100%;
+        overflow: hidden;
+        position: relative;
+        z-index: 9999;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .marquee-container {
+        display: flex;
+        width: max-content;
+        animation: scrollText 20s linear infinite;
+    }
+
+    /* Pause animation on hover */
+    .marquee-container:hover {
+        animation-play-state: paused;
+    }
+
+    .marquee-content {
+        display: flex;
+        align-items: center;
+        gap: 3rem;
+        padding-right: 3rem; /* Matches gap to ensure seamless loop */
+    }
+
+    .marquee-content span {
+        font-family: 'Great Vibes', cursive;
+        font-size: clamp(2.5rem, 4.5vw, 4rem);
+        color: white;
+        line-height: 1;
+        letter-spacing: 0.02em;
+        white-space: nowrap;
+    }
+
+    .marquee-content .dot {
+        font-family: var(--font-sans, sans-serif);
+        font-size: 1rem;
+        color: var(--accent-warm, #E8927C);
+        opacity: 0.6;
+    }
+
+    @keyframes scrollText {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+</style>

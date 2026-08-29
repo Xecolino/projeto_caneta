@@ -1,0 +1,127 @@
+---
+// src/components/BenefitCard.astro
+
+interface Props {
+  number: string;
+  dataBenefit: string;
+  title: string;
+  badge?: string;
+}
+
+const { number, dataBenefit, title, badge } = Astro.props;
+---
+
+<div class="benefit-card" data-benefit={dataBenefit}>
+    <div class="benefit-number">{number}</div>
+    <div class="benefit-info">
+        <h3 class="benefit-name">
+            {title}
+            {badge && <span class="benefit-badge">{badge}</span>}
+        </h3>
+        <p class="benefit-desc">
+            <slot />
+        </p>
+    </div>
+</div>
+
+<style>
+.benefit-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 2rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    transition: all 0.4s var(--easing-smooth);
+    position: relative;
+}
+
+.benefit-card:last-child {
+    border-bottom: none;
+}
+
+.benefit-card:hover {
+    padding-left: 0.75rem;
+}
+
+/* Hover glow effect */
+.benefit-card::before {
+    content: '';
+    position: absolute;
+    left: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    background: var(--accent-warm);
+    border-radius: var(--radius-full);
+    transition: height 0.4s var(--easing-smooth);
+}
+
+.benefit-card:hover::before {
+    height: 40px;
+}
+
+.benefit-number {
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.05em;
+    transition: all 0.4s var(--easing-smooth);
+}
+
+.benefit-card:hover .benefit-number {
+    background: var(--accent-warm);
+    border-color: var(--accent-warm);
+    color: white;
+}
+
+.benefit-info {
+    flex: 1;
+}
+
+.benefit-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.benefit-badge {
+    display: inline-flex;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-sm);
+    color: rgba(255, 255, 255, 0.6);
+    font-family: var(--font-sans);
+}
+
+.benefit-desc {
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.4);
+    max-width: 420px;
+}
+
+:global(.benefit-highlight) {
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+}
+</style>

@@ -1,0 +1,205 @@
+---
+// src/components/StockModal.astro
+interface Props {
+  productTitle: string;
+}
+
+const { productTitle } = Astro.props;
+---
+
+<div id="notify-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-content">
+        <button class="modal-close" id="modal-close-btn" aria-label="Fechar">
+            <iconify-icon icon="lucide:x"></iconify-icon>
+        </button>
+        
+        <div class="modal-badge">Alerta de Estoque</div>
+        <h2 class="modal-title">Avise-me quando chegar</h2>
+        <p class="modal-subtitle">
+            Informe seu e-mail para receber uma notificação assim que o modelo <strong>{productTitle}</strong> estiver disponível.
+        </p>
+
+        <form class="notify-form" onsubmit="event.preventDefault(); document.getElementById('notify-modal').classList.remove('active'); alert('Notificação cadastrada com sucesso!');">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="seu.email@exemplo.com" required />
+            </div>
+            <div class="form-group">
+                <label for="name">Nome (Opcional)</label>
+                <input type="text" id="name" placeholder="Seu nome" />
+            </div>
+            <button type="submit" class="submit-btn">Cadastrar Notificação</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 10000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+
+    .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .modal-content {
+        background: var(--bg-main, #FFFFFF);
+        width: 90%;
+        max-width: 500px;
+        border-radius: var(--radius-lg, 1rem);
+        padding: 2.5rem;
+        position: relative;
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    .modal-overlay.active .modal-content {
+        transform: translateY(0);
+    }
+
+    .modal-close {
+        position: absolute;
+        top: 1.5rem;
+        right: 1.5rem;
+        background: transparent;
+        border: 1px solid var(--border-light, #E7E5E4);
+        border-radius: var(--radius-sm, 0.375rem);
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-secondary, #57534E);
+        transition: all 0.2s ease;
+    }
+
+    .modal-close:hover {
+        background: var(--bg-surface, #F5F5F4);
+        color: var(--text-primary, #1C1C1C);
+    }
+
+    .modal-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-secondary, #57534E);
+        border: 1px solid var(--border-light, #E7E5E4);
+        padding: 0.25rem 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: var(--text-primary, #1C1C1C);
+        margin-bottom: 0.75rem;
+    }
+
+    .modal-subtitle {
+        font-size: 0.95rem;
+        color: var(--text-secondary, #57534E);
+        line-height: 1.5;
+        margin-bottom: 2rem;
+    }
+
+    .modal-subtitle strong {
+        color: var(--text-primary, #1C1C1C);
+        font-weight: 600;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        color: var(--text-muted, #A8A29E);
+        margin-bottom: 0.5rem;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1px solid var(--border-light, #E7E5E4);
+        border-radius: var(--radius-sm, 0.375rem);
+        background: var(--bg-subtle, #FAFAFA);
+        font-family: var(--font-sans, sans-serif);
+        font-size: 1rem;
+        color: var(--text-primary, #1C1C1C);
+        transition: border-color 0.2s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-dark, #1C1917);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 1rem;
+        background: var(--primary-dark, #1C1917);
+        color: white;
+        border: none;
+        border-radius: var(--radius-sm, 0.375rem);
+        font-family: var(--font-sans, sans-serif);
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .submit-btn:hover {
+        background: #000;
+    }
+</style>
+
+<script is:inline>
+    // Usamos um IIFE para evitar conflitos se houver múltiplos componentes no futuro,
+    // mas também podemos usar script normal do Astro sem is:inline.
+    document.addEventListener('DOMContentLoaded', () => {
+        const notifyBtn = document.getElementById('notify-btn');
+        const modal = document.getElementById('notify-modal');
+        const closeBtn = document.getElementById('modal-close-btn');
+
+        if (notifyBtn && modal && closeBtn) {
+            notifyBtn.addEventListener('click', () => {
+                modal.classList.add('active');
+            });
+
+            closeBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        }
+    });
+</script>

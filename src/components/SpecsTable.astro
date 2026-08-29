@@ -1,0 +1,118 @@
+---
+// src/components/SpecsTable.astro
+---
+
+<section class="specs-section">
+    <div class="specs-container">
+        <h2 class="specs-title">Especificações Técnicas</h2>
+        <div class="specs-grid">
+            <div class="spec-row">
+                <span class="spec-label">Material do Corpo</span>
+                <span class="spec-value">Alumínio Aeroespacial (AL-7075-T6)</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Peso Total</span>
+                <span class="spec-value">12g (Design Ultraleve)</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Mecanismo Interno</span>
+                <span class="spec-value">Precisão Suíça (Tolerância ±0.01mm)</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Ponta</span>
+                <span class="spec-value">0.1mm (Aço inoxidável c/ Titânio)</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Tipo de Tinta</span>
+                <span class="spec-value">Pigmentada à base d'água (Dermatest®)</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Resistência</span>
+                <span class="spec-value">À prova d'água e UV (após secagem)</span>
+            </div>
+            <div class="spec-row">
+                <span class="spec-label">Capacidade de Traço</span>
+                <span class="spec-value">> 2.000 metros contínuos</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+    .specs-section {
+        background-color: #000000;
+        padding: 6rem 2rem;
+        color: white;
+    }
+
+    .specs-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .specs-title {
+        font-family: var(--font-sans, sans-serif);
+        font-size: clamp(2rem, 4vw, 2.5rem);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        margin-bottom: 3.5rem;
+        text-align: center;
+        color: white;
+    }
+
+    .specs-grid {
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .spec-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        transition: all 0.4s ease;
+    }
+
+    .spec-row:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .spec-label {
+        font-family: var(--font-sans, sans-serif);
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.5);
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+    }
+
+    .spec-value {
+        font-family: var(--font-sans, sans-serif);
+        font-size: 1.125rem;
+        font-weight: 400;
+        color: white;
+        text-align: right;
+    }
+
+    @media (max-width: 600px) {
+        .spec-row {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+        
+        .spec-row:hover {
+            padding-left: 0;
+            padding-right: 0;
+            background-color: transparent;
+        }
+
+        .spec-value {
+            text-align: left;
+        }
+    }
+</style>
