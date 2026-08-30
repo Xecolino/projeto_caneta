@@ -1,5 +1,5 @@
 ---
-// Header.astro
+// Header.astro — Responsive with mobile hamburger menu
 ---
 <header class="nav" id="mainNav">
     <nav class="nav-inner">
@@ -13,21 +13,66 @@
             <span>ARTOOLS</span>
         </div>
 
-        <!-- Links -->
+        <!-- Desktop Links -->
         <ul class="nav-links">
-            <li><a href="/" class="nav-item" onclick="document.getElementById('notify-modal')?.classList.add('active');">INÍCIO</a></li>
-            <li><a href="/nova-pagina" class="nav-item" onclick="document.getElementById('notify-modal')?.classList.add('active');">CATÁLAGO</a></li>
-            <li><a href="#beneficios" class="nav-item" onclick="document.getElementById('notify-modal')?.classList.add('active');">DETALHES DO PRODUTO</a></li>
+            <li><a href="/" class="nav-item">INÍCIO</a></li>
+            <li><a href="/nova-pagina" class="nav-item">CATÁLAGO</a></li>
+            <li><a href="#beneficios" class="nav-item">DETALHES DO PRODUTO</a></li>
         </ul>
 
-        <!-- Theme Toggle -->
-        <button class="nav-theme-toggle" aria-label="Alternar tema">
-            <iconify-icon icon="solar:sun-line-duotone" style="font-size: 1.125rem; color: var(--text-secondary);"></iconify-icon>
-        </button>
+        <!-- Right side: Theme Toggle + Hamburger -->
+        <div class="nav-right">
+            <!-- Theme Toggle -->
+            <button class="nav-theme-toggle" aria-label="Alternar tema">
+                <iconify-icon icon="solar:sun-line-duotone" style="font-size: 1.125rem; color: var(--text-secondary);"></iconify-icon>
+            </button>
+
+            <!-- Hamburger button (mobile only) -->
+            <button class="hamburger" id="hamburgerBtn" aria-label="Abrir menu" aria-expanded="false">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+        </div>
     </nav>
 </header>
 
-<style>
+<!-- Mobile Menu Overlay -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+
+<!-- Mobile Menu Panel -->
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu mobile">
+    <div class="mobile-menu-header">
+        <div class="nav-brand">
+            <div class="nav-brand-icon">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <span>ARTOOLS</span>
+        </div>
+        <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Fechar menu">
+            <iconify-icon icon="solar:close-circle-line-duotone" style="font-size: 1.5rem;"></iconify-icon>
+        </button>
+    </div>
+
+    <ul class="mobile-menu-links">
+        <li style="--i: 0"><a href="/" class="mobile-menu-link">INÍCIO</a></li>
+        <li style="--i: 1"><a href="/nova-pagina" class="mobile-menu-link">CATÁLAGO</a></li>
+        <li style="--i: 2"><a href="#beneficios" class="mobile-menu-link">DETALHES DO PRODUTO</a></li>
+    </ul>
+
+    <div class="mobile-menu-footer">
+        <p class="mobile-menu-tagline">Precision Pen — A caneta mais tecnológica do mundo.</p>
+        <div class="mobile-menu-socials">
+            <a href="#" aria-label="Instagram"><iconify-icon icon="mdi:instagram" style="font-size: 1.25rem;"></iconify-icon></a>
+            <a href="#" aria-label="Twitter"><iconify-icon icon="mdi:twitter" style="font-size: 1.25rem;"></iconify-icon></a>
+            <a href="#" aria-label="YouTube"><iconify-icon icon="mdi:youtube" style="font-size: 1.25rem;"></iconify-icon></a>
+        </div>
+    </div>
+</nav>
+
+<style is:global>
     /* =============================================
        NAVIGATION
     ============================================= */
@@ -126,6 +171,13 @@
         width: 100%;
     }
 
+    /* Right side container */
+    .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
     .nav-theme-toggle {
         width: 36px;
         height: 36px;
@@ -144,9 +196,237 @@
         border-color: var(--border-medium);
     }
 
+    /* =============================================
+       HAMBURGER BUTTON (hidden on desktop)
+    ============================================= */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius-sm);
+        background: var(--bg-main);
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1001;
+    }
+
+    .hamburger:hover {
+        background: var(--bg-surface);
+        border-color: var(--border-medium);
+    }
+
+    .hamburger-line {
+        display: block;
+        width: 16px;
+        height: 1.5px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: all 0.4s var(--easing-smooth);
+        transform-origin: center;
+    }
+
+    /* Hamburger → X animation */
+    .hamburger.active .hamburger-line:nth-child(1) {
+        transform: translateY(6.5px) rotate(45deg);
+    }
+
+    .hamburger.active .hamburger-line:nth-child(2) {
+        opacity: 0;
+        transform: scaleX(0);
+    }
+
+    .hamburger.active .hamburger-line:nth-child(3) {
+        transform: translateY(-6.5px) rotate(-45deg);
+    }
+
+    /* =============================================
+       MOBILE MENU OVERLAY
+    ============================================= */
+    .mobile-menu-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
+        z-index: 1100;
+        opacity: 0;
+        transition: opacity 0.4s var(--easing-smooth);
+        pointer-events: none;
+    }
+
+    .mobile-menu-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* =============================================
+       MOBILE MENU PANEL
+    ============================================= */
+    .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: min(85vw, 360px);
+        height: 100vh;
+        height: 100dvh;
+        background: var(--bg-main);
+        z-index: 1200;
+        flex-direction: column;
+        transform: translateX(100%);
+        transition: transform 0.5s var(--easing-smooth);
+        box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+        overflow-y: auto;
+    }
+
+    .mobile-menu.active {
+        transform: translateX(0);
+    }
+
+    .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-light);
+    }
+
+    .mobile-menu-close {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius-full);
+        border: 1px solid var(--border-light);
+        background: var(--bg-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .mobile-menu-close:hover {
+        background: var(--border-light);
+        color: var(--text-primary);
+    }
+
+    .mobile-menu-links {
+        list-style: none;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        flex: 1;
+    }
+
+    .mobile-menu-links li {
+        opacity: 0;
+        transform: translateX(30px);
+        transition: all 0.4s var(--easing-smooth);
+        transition-delay: calc(var(--i) * 80ms + 150ms);
+    }
+
+    .mobile-menu.active .mobile-menu-links li {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .mobile-menu-link {
+        display: flex;
+        align-items: center;
+        padding: 1.25rem 0;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border-light);
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .mobile-menu-link::before {
+        content: '';
+        width: 0;
+        height: 2px;
+        background: var(--accent-warm);
+        position: absolute;
+        left: 0;
+        bottom: -1px;
+        transition: width 0.4s var(--easing-smooth);
+    }
+
+    .mobile-menu-link:hover {
+        color: var(--accent-warm);
+        padding-left: 0.75rem;
+    }
+
+    .mobile-menu-link:hover::before {
+        width: 40px;
+    }
+
+    .mobile-menu-footer {
+        padding: 1.5rem;
+        border-top: 1px solid var(--border-light);
+        margin-top: auto;
+    }
+
+    .mobile-menu-tagline {
+        font-size: 0.75rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 1rem;
+    }
+
+    .mobile-menu-socials {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .mobile-menu-socials a {
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-full);
+        border: 1px solid var(--border-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-secondary);
+        transition: all 0.3s ease;
+    }
+
+    .mobile-menu-socials a:hover {
+        background: var(--primary-dark);
+        border-color: var(--primary-dark);
+        color: white;
+    }
+
+    /* =============================================
+       RESPONSIVE
+    ============================================= */
     @media (max-width: 1024px) {
         .nav-links {
             display: none;
+        }
+
+        .hamburger {
+            display: flex;
+        }
+
+        .mobile-menu-overlay {
+            display: block;
+        }
+
+        .mobile-menu {
+            display: flex;
         }
     }
 
@@ -156,3 +436,83 @@
         }
     }
 </style>
+
+<script is:inline>
+    // Mobile menu toggle logic
+    document.addEventListener('DOMContentLoaded', () => {
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+        const mobileMenuClose = document.getElementById('mobileMenuClose');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+
+        function openMenu() {
+            hamburgerBtn.classList.add('active');
+            hamburgerBtn.setAttribute('aria-expanded', 'true');
+            mobileMenu.classList.add('active');
+            mobileMenuOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMenu() {
+            hamburgerBtn.classList.remove('active');
+            hamburgerBtn.setAttribute('aria-expanded', 'false');
+            mobileMenu.classList.remove('active');
+            mobileMenuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+
+            // Reset link animations for re-entry
+            mobileMenu.querySelectorAll('.mobile-menu-links li').forEach(li => {
+                li.style.opacity = '0';
+                li.style.transform = 'translateX(30px)';
+            });
+
+            // Re-enable animation after transition
+            setTimeout(() => {
+                mobileMenu.querySelectorAll('.mobile-menu-links li').forEach(li => {
+                    li.style.opacity = '';
+                    li.style.transform = '';
+                });
+            }, 500);
+        }
+
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('active')) {
+                    closeMenu();
+                } else {
+                    openMenu();
+                }
+            });
+        }
+
+        if (mobileMenuClose) {
+            mobileMenuClose.addEventListener('click', closeMenu);
+        }
+
+        if (mobileMenuOverlay) {
+            mobileMenuOverlay.addEventListener('click', closeMenu);
+        }
+
+        // Close menu when clicking on a link
+        mobileMenuLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                closeMenu();
+            });
+        });
+
+        // Close menu on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+
+        // Close menu on resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 1024 && mobileMenu.classList.contains('active')) {
+                closeMenu();
+            }
+        });
+    });
+</script>

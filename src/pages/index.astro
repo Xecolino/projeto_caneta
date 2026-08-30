@@ -116,121 +116,7 @@ import SpecsTable from '../components/SpecsTable.astro';
             color: white;
         }
 
-        /* =============================================
-           NAVIGATION
-        ============================================= */
-        .nav {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(255, 255, 255, 0.72);
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            border-bottom: 1px solid var(--border-light);
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.8s var(--easing-smooth);
-        }
-
-        .nav.loaded {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .nav-inner {
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-        }
-
-        .nav-brand {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-        }
-
-        .nav-brand-icon {
-            width: 28px;
-            height: 28px;
-            background: var(--primary-dark);
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .nav-brand-icon svg {
-            width: 16px;
-            height: 16px;
-            fill: white;
-        }
-
-        .nav-brand span {
-            font-weight: 700;
-            font-size: 1.125rem;
-            letter-spacing: -0.03em;
-            color: var(--text-primary);
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 2.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-size: 0.75rem;
-            font-weight: 500;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--text-secondary);
-            transition: color 0.3s ease;
-            position: relative;
-        }
-
-        .nav-links a::after {
-            content: '';
-            position: absolute;
-            bottom: -4px;
-            left: 0;
-            width: 0;
-            height: 1px;
-            background: var(--text-primary);
-            transition: width 0.4s var(--easing-smooth);
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-        }
-
-        .nav-links a:hover::after {
-            width: 100%;
-        }
-
-        .nav-theme-toggle {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-light);
-            background: var(--bg-main);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .nav-theme-toggle:hover {
-            background: var(--bg-surface);
-            border-color: var(--border-medium);
-        }
+        /* Navigation styles are in Header.astro component */
 
         /* =============================================
            HERO SECTION — Split Layout
@@ -693,15 +579,9 @@ import SpecsTable from '../components/SpecsTable.astro';
                 transform: translate(50%, -50%) scale(1.1);
             }
 
-            .nav-links {
-                display: none;
-            }
         }
 
         @media (max-width: 640px) {
-            .nav-inner {
-                padding: 0.875rem 1.25rem;
-            }
 
             .hero-content {
                 padding: 2.5rem 1.5rem;
