@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Button from '../components/Button.astro';
@@ -6,6 +7,13 @@ import BenefitCard from '../components/BenefitCard.astro';
 import Marquee from '../components/Marquee.astro';
 import VideoStrip from '../components/VideoStrip.astro';
 import SpecsTable from '../components/SpecsTable.astro';
+
+// Images (from src/assets/ for automatic optimization)
+import heroPenImg from '../assets/img_qphat5mt1y2kjv.png';
+import penDarkHeroImg from '../assets/pen-dark-hero.jpg';
+import artistWorkspace1 from '../assets/artist_workspace_1.jpg';
+import artistWorkspace2 from '../assets/artist_workspace_2.jpg';
+import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
 ---
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
@@ -1482,7 +1490,7 @@ import SpecsTable from '../components/SpecsTable.astro';
                 <div class="hero-visual-inner">
                     <!-- Product Image -->
                     <div class="hero-product-image reveal delay-300" id="heroProduct">
-                        <img src="files/img_qphat5mt1y2kjv.png" alt="ARTOOLS Pigmentum 0.1 — Precision Pen sobre caderno de sketches" />
+                        <Image src={heroPenImg} alt="ARTOOLS Pigmentum 0.1 — Precision Pen sobre caderno de sketches" />
                     </div>
 
                     <!-- Play Button -->
@@ -1580,7 +1588,7 @@ import SpecsTable from '../components/SpecsTable.astro';
                     <div class="connection-dot connection-dot-3"></div>
 
                     <!-- Product image -->
-                    <img src="files/pen-dark-hero.jpg" alt="ARTOOLS Pigmentum — vista premium em fundo escuro" />
+                    <Image src={penDarkHeroImg} alt="ARTOOLS Pigmentum — vista premium em fundo escuro" />
                 </div>
 
                 <!-- Right — Feature Cards -->
@@ -1657,7 +1665,7 @@ import SpecsTable from '../components/SpecsTable.astro';
                 <!-- Card 1: Architecture -->
                 <div class="bento-card bento-large">
                     <div class="bento-bg">
-                        <img src="files/artist_workspace_1_1787349857917.jpg" alt="Mesa de Arquitetura" />
+                        <Image src={artistWorkspace1} alt="Mesa de Arquitetura" />
                         <div class="bento-overlay"></div>
                     </div>
                     <div class="bento-content">
@@ -1670,7 +1678,7 @@ import SpecsTable from '../components/SpecsTable.astro';
                 <!-- Card 2: Illustration -->
                 <div class="bento-card bento-small">
                     <div class="bento-bg">
-                        <img src="files/artist_workspace_2_1787349869121.jpg" alt="Ilustração Artística" />
+                        <Image src={artistWorkspace2} alt="Ilustração Artística" />
                         <div class="bento-overlay"></div>
                     </div>
                     <div class="bento-content">
@@ -1683,7 +1691,7 @@ import SpecsTable from '../components/SpecsTable.astro';
                 <!-- Card 3: Fashion -->
                 <div class="bento-card bento-small">
                     <div class="bento-bg">
-                        <img src="files/artist_workspace_3_1787349880257.jpg" alt="Design de Moda e Croquis" />
+                        <Image src={artistWorkspace3} alt="Design de Moda e Croquis" />
                         <div class="bento-overlay"></div>
                     </div>
                     <div class="bento-content">
