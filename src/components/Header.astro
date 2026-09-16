@@ -1,7 +1,7 @@
 ---
 // Header.astro — Responsive with mobile hamburger menu
 ---
-<header class="nav" id="mainNav">
+<header class="nav" id="mainNav" transition:persist>
     <nav class="nav-inner">
         <!-- Brand -->
         <div class="nav-brand">
@@ -38,10 +38,10 @@
 </header>
 
 <!-- Mobile Menu Overlay -->
-<div class="mobile-menu-overlay" id="mobileMenuOverlay"></div>
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" transition:persist></div>
 
 <!-- Mobile Menu Panel -->
-<nav class="mobile-menu" id="mobileMenu" aria-label="Menu mobile">
+<nav class="mobile-menu" id="mobileMenu" aria-label="Menu mobile" transition:persist>
     <div class="mobile-menu-header">
         <div class="nav-brand">
             <div class="nav-brand-icon">
@@ -439,7 +439,7 @@
 
 <script is:inline>
     // Mobile menu toggle logic
-    document.addEventListener('DOMContentLoaded', () => {
+    (function initHeader() {
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const mobileMenu = document.getElementById('mobileMenu');
         const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
@@ -476,7 +476,9 @@
             }, 500);
         }
 
-        if (hamburgerBtn) {
+        if (hamburgerBtn && !hamburgerBtn._headerBound) {
+            hamburgerBtn._headerBound = true;
+
             hamburgerBtn.addEventListener('click', () => {
                 if (mobileMenu.classList.contains('active')) {
                     closeMenu();
@@ -484,35 +486,51 @@
                     openMenu();
                 }
             });
-        }
 
-        if (mobileMenuClose) {
-            mobileMenuClose.addEventListener('click', closeMenu);
-        }
+            if (mobileMenuClose) {
+                mobileMenuClose.addEventListener('click', closeMenu);
+            }
 
-        if (mobileMenuOverlay) {
-            mobileMenuOverlay.addEventListener('click', closeMenu);
-        }
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.addEventListener('click', closeMenu);
+            }
 
-        // Close menu when clicking on a link
-        mobileMenuLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                closeMenu();
+            // Close menu when clicking on a link
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    closeMenu();
+                });
             });
-        });
 
-        // Close menu on Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+            // Close menu on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
+                    closeMenu();
+                }
+            });
+
+            // Close menu on resize to desktop
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 1024 && mobileMenu.classList.contains('active')) {
+                    closeMenu();
+                }
+            });
+        }
+
+        // ----------------------------------------
+        // View Transitions support
+        // ----------------------------------------
+        // Close mobile menu before page swap so it doesn't stay open on new page
+        document.addEventListener('astro:before-preparation', () => {
+            if (mobileMenu && mobileMenu.classList.contains('active')) {
                 closeMenu();
             }
         });
 
-        // Close menu on resize to desktop
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 1024 && mobileMenu.classList.contains('active')) {
-                closeMenu();
-            }
+        // Ensure the nav stays visible after View Transitions swap
+        document.addEventListener('astro:after-swap', () => {
+            const nav = document.getElementById('mainNav');
+            if (nav) nav.classList.add('loaded');
         });
-    });
+    })();
 </script>

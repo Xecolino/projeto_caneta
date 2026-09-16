@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ProductCard from '../components/ProductCard.astro';
+import { ClientRouter } from 'astro:transitions';
 ---
 <!DOCTYPE html>
 <html lang="pt-BR" class="scroll-smooth">
@@ -117,11 +118,12 @@ import ProductCard from '../components/ProductCard.astro';
             gap: 2rem;
         }
     </style>
+    <ClientRouter />
 </head>
 <body>
     <Header />
     
-    <main class="catalog-page">
+    <main class="catalog-page" transition:animate="slide">
         <section class="catalog-header">
             <h1 class="catalog-title">Catálogo de Produtos</h1>
             <p class="catalog-subtitle">Descubra a precisão em cada um de nossos modelos exclusivos. Explore as diferentes configurações e encontre a ferramenta ideal para a sua criatividade.</p>
@@ -188,8 +190,7 @@ import ProductCard from '../components/ProductCard.astro';
     <Footer />
 
     <script is:inline>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Garante que o Header (navbar) apareça sem precisar dos carregadores complexos da index
+        document.addEventListener('astro:page-load', () => {
             const nav = document.getElementById('mainNav');
             if (nav) nav.classList.add('loaded');
         });

@@ -1,5 +1,6 @@
 ---
 import { Image } from 'astro:assets';
+import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Button from '../components/Button.astro';
@@ -1423,6 +1424,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
             }
         }
     </style>
+    <ClientRouter />
 </head>
 
 <body>
@@ -1433,7 +1435,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
     </div>
 
     <!-- Scroll Progress -->
-    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="scroll-progress" id="scrollProgress" transition:persist></div>
 
     <!-- ========================================
          NAVIGATION
@@ -1443,6 +1445,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
     <!-- ========================================
          HERO SECTION
     ========================================= -->
+    <main transition:animate="slide">
     <section class="hero grid-bg" id="hero">
         <div class="hero-container">
 
@@ -1707,13 +1710,14 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
     <Marquee />
     <VideoStrip />
     <SpecsTable />
+    </main>
     <Footer />
 
     <!-- ========================================
          JAVASCRIPT
     ========================================= -->
     <script is:inline>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('astro:page-load', () => {
             const loader = document.getElementById('loader');
             const nav = document.getElementById('mainNav');
             const heroTitle = document.getElementById('heroTitle');
@@ -1723,29 +1727,31 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
             // ----------------------------------------
             // 1. Loader & Initial Animations
             // ----------------------------------------
-            window.addEventListener('load', () => {
-                // Hide loader
-                setTimeout(() => {
-                    loader.classList.add('hidden');
-                }, 600);
+            // On View Transition navigations, skip the loader entirely
+            if (loader) {
+                loader.classList.add('hidden');
+            }
 
-                // Nav entrance
+            // Nav entrance
+            if (nav) {
                 setTimeout(() => {
                     nav.classList.add('loaded');
-                }, 800);
+                }, 200);
+            }
 
-                // Hero title text reveal
+            // Hero title text reveal
+            if (heroTitle) {
                 setTimeout(() => {
                     heroTitle.classList.add('reveal-active');
-                }, 1000);
+                }, 400);
+            }
 
-                // Trigger all hero reveal elements
-                setTimeout(() => {
-                    document.querySelectorAll('.hero .reveal').forEach(el => {
-                        el.classList.add('active');
-                    });
-                }, 1200);
-            });
+            // Trigger all hero reveal elements
+            setTimeout(() => {
+                document.querySelectorAll('.hero .reveal').forEach(el => {
+                    el.classList.add('active');
+                });
+            }, 600);
 
             // ----------------------------------------
             // 2. Intersection Observer for Reveals

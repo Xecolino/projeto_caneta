@@ -3,6 +3,7 @@ import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Button from '../../components/Button.astro';
 import StockModal from '../../components/StockModal.astro';
+import { ClientRouter } from 'astro:transitions';
 
 export function getStaticPaths() {
   const products = [
@@ -346,11 +347,12 @@ const { product } = Astro.props;
             }
         }
     </style>
+    <ClientRouter />
 </head>
 <body>
     <Header />
     
-    <main class="product-page">
+    <main class="product-page" transition:animate="slide">
         <div class="product-container">
             <!-- Coluna da Imagem -->
             <div class="product-image-section">
@@ -390,7 +392,7 @@ const { product } = Astro.props;
     <StockModal productTitle={product.title} />
 
     <script is:inline>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('astro:page-load', () => {
             const nav = document.getElementById('mainNav');
             if (nav) nav.classList.add('loaded');
         });
