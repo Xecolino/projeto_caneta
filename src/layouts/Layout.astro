@@ -1,12 +1,29 @@
+---
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+	title?: string;
+	description?: string;
+	canonicalURL?: string;
+}
+
+const {
+	title = 'ARTOOLS — Precision Pen | A caneta mais tecnológica do mundo',
+	description = 'A Artools Precision Pen redefine o equilíbrio entre peso, fluxo e design. Feita para criadores que exigem perfeição em cada traço.',
+	canonicalURL = Astro.url.href,
+} = Astro.props;
+---
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalURL} />
+		<ClientRouter />
 	</head>
 	<body>
 		<slot />
