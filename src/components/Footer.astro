@@ -7,7 +7,7 @@ import Button from './Button.astro';
 ========================================= -->
 <section class="video-cta" id="cta" transition:persist>
     <!-- Background Video -->
-    <video class="video-cta-bg" autoplay muted loop playsinline>
+    <video class="video-cta-bg" muted loop playsinline preload="none">
         <source src="files/video-1787256727561.mp4" type="video/mp4" />
     </video>
     <div class="video-cta-overlay"></div>
@@ -168,3 +168,22 @@ import Button from './Button.astro';
         }
     }
 </style>
+
+<script is:inline>
+    document.addEventListener('astro:page-load', () => {
+        const ctaVideo = document.querySelector('.video-cta-bg');
+        if (ctaVideo && 'IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        ctaVideo.preload = 'auto';
+                        ctaVideo.load();
+                        ctaVideo.play().catch(() => {});
+                        obs.unobserve(ctaVideo);
+                    }
+                });
+            }, { rootMargin: '300px' });
+            obs.observe(ctaVideo);
+        }
+    });
+</script>

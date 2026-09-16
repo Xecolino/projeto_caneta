@@ -2,10 +2,29 @@
 // src/components/VideoStrip.astro
 ---
 <section class="video-strip">
-    <video class="strip-video" autoplay muted loop playsinline>
+    <video class="strip-video" muted loop playsinline preload="none">
         <source src="files/video-1787256727561.mp4" type="video/mp4" />
     </video>
 </section>
+
+<script is:inline>
+    document.addEventListener('astro:page-load', () => {
+        const stripVideo = document.querySelector('.video-strip video');
+        if (stripVideo && 'IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        stripVideo.preload = 'auto';
+                        stripVideo.load();
+                        stripVideo.play().catch(() => {});
+                        obs.unobserve(stripVideo);
+                    }
+                });
+            }, { rootMargin: '200px' });
+            obs.observe(stripVideo);
+        }
+    });
+</script>
 
 <style>
     .video-strip {

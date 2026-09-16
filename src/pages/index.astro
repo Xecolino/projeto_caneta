@@ -1,6 +1,6 @@
 ---
+import Layout from '../layouts/Layout.astro';
 import { Image } from 'astro:assets';
-import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import Button from '../components/Button.astro';
@@ -16,29 +16,8 @@ import artistWorkspace1 from '../assets/artist_workspace_1.jpg';
 import artistWorkspace2 from '../assets/artist_workspace_2.jpg';
 import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
 ---
-<!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
 
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>ARTOOLS — Precision Pen | A caneta mais tecnológica do mundo</title>
-    <meta name="description" content="A Artools Precision Pen redefine o equilíbrio entre peso, fluxo e design. Feita para criadores que exigem perfeição em cada traço." />
-
-    <!-- Google Fonts — Inter (from Design System) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
-
-    <!-- GSAP + ScrollTrigger via CDN -->
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-    <!-- Iconify for icons (from Design System) -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
-
-    <style>
+<style is:global>
         /* =============================================
            DESIGN SYSTEM VARIABLES & FOUNDATIONS
            (Inherited from design_system.html)
@@ -1424,10 +1403,12 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
             }
         }
     </style>
-    <ClientRouter />
-</head>
 
-<body>
+<Layout
+    title="ARTOOLS Precision Pen — A Caneta Mais Tecnológica do Mundo | Precisão e Design Suíço"
+    description="Conheça a ARTOOLS Precision Pen: o ápice da engenharia aeroespacial e precisão suíça micrométrica. A ferramenta definitiva para criadores que buscam fluidez impecável e excelência em cada traço."
+    image="/files/pen-dark-hero.jpg"
+>
 
     <!-- Loading Screen -->
     <div class="loader" id="loader">
@@ -1493,7 +1474,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                 <div class="hero-visual-inner">
                     <!-- Product Image -->
                     <div class="hero-product-image reveal delay-300" id="heroProduct">
-                        <Image src={heroPenImg} alt="ARTOOLS Pigmentum 0.1 — Precision Pen sobre caderno de sketches" />
+                        <Image src={heroPenImg} alt="ARTOOLS Pigmentum 0.1 — Precision Pen sobre caderno de sketches" width={800} height={800} loading="eager" fetchpriority="high" />
                     </div>
 
                     <!-- Play Button -->
@@ -1525,7 +1506,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
     ========================================= -->
     <section class="video-section" id="video">
         <div class="video-sticky">
-            <video id="scrollVideo" muted playsinline preload="auto">
+            <video id="scrollVideo" muted playsinline preload="none">
                 <source src="files/video-1787256727561.mp4" type="video/mp4" />
             </video>
 
@@ -1591,7 +1572,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                     <div class="connection-dot connection-dot-3"></div>
 
                     <!-- Product image -->
-                    <Image src={penDarkHeroImg} alt="ARTOOLS Pigmentum — vista premium em fundo escuro" />
+                    <Image src={penDarkHeroImg} alt="ARTOOLS Pigmentum — vista premium em fundo escuro" width={700} height={700} loading="lazy" />
                 </div>
 
                 <!-- Right — Feature Cards -->
@@ -1668,7 +1649,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                 <!-- Card 1: Architecture -->
                 <div class="bento-card bento-large">
                     <div class="bento-bg">
-                        <Image src={artistWorkspace1} alt="Mesa de Arquitetura" />
+                        <Image src={artistWorkspace1} alt="Mesa de Arquitetura" width={800} height={600} loading="lazy" />
                         <div class="bento-overlay"></div>
                     </div>
                     <div class="bento-content">
@@ -1681,7 +1662,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                 <!-- Card 2: Illustration -->
                 <div class="bento-card bento-small">
                     <div class="bento-bg">
-                        <Image src={artistWorkspace2} alt="Ilustração Artística" />
+                        <Image src={artistWorkspace2} alt="Ilustração Artística" width={600} height={450} loading="lazy" />
                         <div class="bento-overlay"></div>
                     </div>
                     <div class="bento-content">
@@ -1694,7 +1675,7 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                 <!-- Card 3: Fashion -->
                 <div class="bento-card bento-small">
                     <div class="bento-bg">
-                        <Image src={artistWorkspace3} alt="Design de Moda e Croquis" />
+                        <Image src={artistWorkspace3} alt="Design de Moda e Croquis" width={600} height={450} loading="lazy" />
                         <div class="bento-overlay"></div>
                     </div>
                     <div class="bento-content">
@@ -2027,5 +2008,30 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
         });
     </script>
 
-</body>
-</html>
+    <!-- GSAP + ScrollTrigger — loaded at end of body to avoid blocking render -->
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
+    <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+
+    <!-- Lazy-load videos via IntersectionObserver -->
+    <script is:inline>
+        document.addEventListener('astro:page-load', () => {
+            const lazyVideos = document.querySelectorAll('video[preload="none"]');
+            if ('IntersectionObserver' in window && lazyVideos.length) {
+                const videoObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const video = entry.target;
+                            // Trigger load by setting preload and calling load()
+                            video.preload = 'auto';
+                            video.load();
+                            videoObserver.unobserve(video);
+                        }
+                    });
+                }, { rootMargin: '200px' });
+
+                lazyVideos.forEach(v => videoObserver.observe(v));
+            }
+        });
+    </script>
+
+</Layout>

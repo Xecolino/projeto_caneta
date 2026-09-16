@@ -1,9 +1,9 @@
 ---
+import Layout from '../../layouts/Layout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
 import Button from '../../components/Button.astro';
 import StockModal from '../../components/StockModal.astro';
-import { ClientRouter } from 'astro:transitions';
 
 export function getStaticPaths() {
   const products = [
@@ -50,12 +50,40 @@ export function getStaticPaths() {
       ]
     },
     {
+      slug: 'minimal',
+      title: 'Precision Pen Minimal',
+      description: 'Linhas puras, sem adornos desnecessários. Foco absoluto na ergonomia e na fluidez do traço. Cada detalhe foi esculpido para proporcionar conforto incomparável e elegância sutil.',
+      price: 'R$ 950,00',
+      badge: 'Design Minimalista',
+      imgSrc: '/pens/pen_minimal_1787826133464.jpg',
+      specs: [
+        { label: 'Material', value: 'Alumínio Acetinado' },
+        { label: 'Mecanismo', value: 'Retrátil Oculto' },
+        { label: 'Ponta', value: '0.1mm Titânio' },
+        { label: 'Peso', value: '10g' }
+      ]
+    },
+    {
+      slug: 'studio',
+      title: 'Precision Pen Studio',
+      description: 'Desenvolvida especificamente para arquitetos e designers. Empunhadura texturizada antiderrapante que garante controle milimétrico e precisão artística constante.',
+      price: 'R$ 1.100,00',
+      badge: 'Para Criativos',
+      imgSrc: '/pens/pen_studio_1787826144888.jpg',
+      specs: [
+        { label: 'Material', value: 'Alumínio Anodizado' },
+        { label: 'Mecanismo', value: 'Retrátil Macio' },
+        { label: 'Ponta', value: '0.05mm Nano' },
+        { label: 'Peso', value: '11g' }
+      ]
+    },
+    {
       slug: 'rose-gold',
       title: 'Precision Pen Rose Gold',
       description: 'Sofisticação em cada traço com corpo metálico escovado e estrutura banhada a ouro rosa 18k. A verdadeira definição de joia funcional, feita para colecionadores e entusiastas.',
       price: 'R$ 1.500,00',
       badge: 'Colecionador',
-      imgSrc: '/pens/pen_rose_gold_1787826132162.jpg',
+      imgSrc: '/pens/pen_rosegold_1787826154885.jpg',
       specs: [
         { label: 'Material', value: 'Aço c/ Ouro 18k' },
         { label: 'Mecanismo', value: 'Rotativo Suíço' },
@@ -145,20 +173,6 @@ export function getStaticPaths() {
 
 const { product } = Astro.props;
 ---
-<!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
-<head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>{product.title} — Detalhes do Produto</title>
-
-    <!-- Google Fonts — Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    
-    <!-- Iconify for icons -->
-    <script is:inline src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
 
     <style is:global>
         :root {
@@ -347,9 +361,12 @@ const { product } = Astro.props;
             }
         }
     </style>
-    <ClientRouter />
-</head>
-<body>
+
+<Layout
+    title={`${product.title} — Avise-me Quando Disponível | ARTOOLS`}
+    description={`Garanta prioridade para adquirir o modelo ${product.title}. Cadastre-se na lista de espera exclusiva e receba nosso aviso de estoque ('Avise-me') assim que o produto estiver disponível.`}
+    image={product.imgSrc}
+>
     <Header />
     
     <main class="product-page" transition:animate="slide">
@@ -397,5 +414,4 @@ const { product } = Astro.props;
             if (nav) nav.classList.add('loaded');
         });
     </script>
-</body>
-</html>
+</Layout>
