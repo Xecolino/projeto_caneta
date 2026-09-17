@@ -1487,7 +1487,15 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                 <div class="hero-visual-inner">
                     <!-- Product Image -->
                     <div class="hero-product-image reveal delay-300" id="heroProduct">
-                        <Image src={heroPenImg} alt="ARTOOLS Pigmentum 0.1 — Precision Pen sobre caderno de sketches" width={800} height={800} loading="eager" fetchpriority="high" />
+                        <Image 
+                            src={heroPenImg} 
+                            alt="ARTOOLS Pigmentum 0.1 — Precision Pen sobre caderno de sketches" 
+                            widths={[320, 540, 800]} 
+                            sizes="(max-width: 480px) 300px, (max-width: 768px) 500px, 800px" 
+                            loading="eager" 
+                            fetchpriority="high" 
+                            decoding="async" 
+                        />
                     </div>
 
                     <!-- Play Button -->
@@ -1585,7 +1593,14 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                     <div class="connection-dot connection-dot-3"></div>
 
                     <!-- Product image -->
-                    <Image src={penDarkHeroImg} alt="ARTOOLS Pigmentum — vista premium em fundo escuro" width={700} height={700} loading="lazy" />
+                    <Image 
+                        src={penDarkHeroImg} 
+                        alt="ARTOOLS Pigmentum — vista premium em fundo escuro" 
+                        widths={[280, 480, 700]} 
+                        sizes="(max-width: 480px) 250px, (max-width: 768px) 450px, 700px" 
+                        loading="lazy" 
+                        decoding="async" 
+                    />
                 </div>
 
                 <!-- Right — Feature Cards -->
@@ -1807,30 +1822,73 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
             }
 
             // ----------------------------------------
-            // Floating Icons Parallax (benefits section)
+            // 2b. Throttled Scroll Listeners (prevents forced reflow)
             // ----------------------------------------
             const floatingIcons = document.querySelectorAll('.floating-icon');
-            if (floatingIcons.length > 0) {
-                window.addEventListener('scroll', () => {
-                    const benefitsSection = document.getElementById('benefits');
-                    if (!benefitsSection) return;
-                    const rect = benefitsSection.getBoundingClientRect();
-                    const inView = rect.top < window.innerHeight && rect.bottom > 0;
-                    if (inView) {
-                        const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
-                        floatingIcons.forEach((icon, i) => {
-                            const speed = (i + 1) * 8;
-                            const y = (progress - 0.5) * speed;
-                            icon.style.transform = `translateY(${y}px)`;
-                        });
-                    }
+            const benefitsSection = document.getElementById('benefits');
+            let scrollTicking = false;
+
+            window.addEventListener('scroll', () => {
+                if (!scrollTicking) {
+                    window.requestAnimationFrame(() => {
+                        // Scroll progress bar
+                        if (scrollProgress) {
+                            const scrollTop = window.scrollY;
+                            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                            if (docHeight > 0) {
+                                const scrollPercent = (scrollTop / docHeight) * 100;
+                                scrollProgress.style.width = scrollPercent + '%';
+                            }
+                        }
+
+                        // Floating icons parallax
+                        if (benefitsSection && floatingIcons.length > 0) {
+                            const rect = benefitsSection.getBoundingClientRect();
+                            if (rect.top < window.innerHeight && rect.bottom > 0) {
+                                const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+                                floatingIcons.forEach((icon, i) => {
+                                    const speed = (i + 1) * 8;
+                                    const y = (progress - 0.5) * speed;
+                                    icon.style.transform = `translateY(${y}px)`;
+                                });
+                            }
+                        }
+
+                        scrollTicking = false;
+                    });
+                    scrollTicking = true;
+                }
+            }, { passive: true });
+
+            // ----------------------------------------
+            // 3. Smooth Scroll Buttons
+            // ----------------------------------------
+            const btnExplore = document.getElementById('btnExplore');
+            if (btnExplore) {
+                btnExplore.addEventListener('click', () => {
+                    const videoSec = document.getElementById('video');
+                    if (videoSec) videoSec.scrollIntoView({ behavior: 'smooth' });
+                });
+            }
+
+            const heroPlayBtn = document.getElementById('heroPlayBtn');
+            if (heroPlayBtn) {
+                heroPlayBtn.addEventListener('click', () => {
+                    const videoSec = document.getElementById('video');
+                    if (videoSec) videoSec.scrollIntoView({ behavior: 'smooth' });
                 });
             }
 
             // ----------------------------------------
-            // GSAP Animations for Benefits Section
+            // 4. GSAP & ScrollTrigger Animations (Deferred to avoid critical path reflow)
             // ----------------------------------------
-            if (typeof gsap !== 'undefined') {
+            function initGSAPAnimations() {
+                if (typeof gsap === 'undefined') return;
+
+                if (typeof ScrollTrigger !== 'undefined') {
+                    gsap.registerPlugin(ScrollTrigger);
+                }
+
                 // Staggered entrance for benefit cards
                 gsap.utils.toArray('.benefit-card').forEach((card, i) => {
                     gsap.from(card, {
@@ -1848,176 +1906,134 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
                 });
 
                 // Product image scale entrance
-                gsap.from('#benefitsVisual img', {
-                    scrollTrigger: {
-                        trigger: '#benefitsVisual',
-                        start: 'top 80%',
-                        toggleActions: 'play none none none',
-                    },
-                    scale: 0.85,
-                    opacity: 0,
-                    duration: 1.4,
-                    ease: 'power3.out',
-                });
+                const benefitsVisual = document.getElementById('benefitsVisual');
+                if (benefitsVisual) {
+                    gsap.from('#benefitsVisual img', {
+                        scrollTrigger: {
+                            trigger: '#benefitsVisual',
+                            start: 'top 80%',
+                            toggleActions: 'play none none none',
+                        },
+                        scale: 0.85,
+                        opacity: 0,
+                        duration: 1.4,
+                        ease: 'power3.out',
+                    });
 
-                // Floating icons stagger
-                gsap.from('.floating-icon', {
-                    scrollTrigger: {
-                        trigger: '#benefitsVisual',
-                        start: 'top 75%',
-                        toggleActions: 'play none none none',
-                    },
-                    scale: 0,
-                    opacity: 0,
-                    duration: 0.6,
-                    stagger: 0.15,
-                    ease: 'back.out(1.7)',
-                });
+                    gsap.from('.floating-icon', {
+                        scrollTrigger: {
+                            trigger: '#benefitsVisual',
+                            start: 'top 75%',
+                            toggleActions: 'play none none none',
+                        },
+                        scale: 0,
+                        opacity: 0,
+                        duration: 0.6,
+                        stagger: 0.15,
+                        ease: 'back.out(1.7)',
+                    });
 
-                // Connection dots pulse in
-                gsap.from('.connection-dot', {
-                    scrollTrigger: {
-                        trigger: '#benefitsVisual',
-                        start: 'top 70%',
-                        toggleActions: 'play none none none',
-                    },
-                    scale: 0,
-                    duration: 0.4,
-                    stagger: 0.1,
-                    ease: 'power2.out',
-                });
-            }
+                    gsap.from('.connection-dot', {
+                        scrollTrigger: {
+                            trigger: '#benefitsVisual',
+                            start: 'top 70%',
+                            toggleActions: 'play none none none',
+                        },
+                        scale: 0,
+                        duration: 0.4,
+                        stagger: 0.1,
+                        ease: 'power2.out',
+                    });
+                }
 
-            // ----------------------------------------
-            // 3. Scroll Progress Bar
-            // ----------------------------------------
-            if (scrollProgress) {
-                window.addEventListener('scroll', () => {
-                    const scrollTop = window.scrollY;
-                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                    const scrollPercent = (scrollTop / docHeight) * 100;
-                    scrollProgress.style.width = scrollPercent + '%';
-                });
-            }
+                // Bento grid
+                if (document.querySelector('.bento-grid')) {
+                    gsap.from('.bento-card', {
+                        scrollTrigger: {
+                            trigger: '.bento-grid',
+                            start: 'top 85%',
+                            toggleActions: 'play none none none',
+                        },
+                        y: 60,
+                        opacity: 0,
+                        duration: 1,
+                        stagger: 0.15,
+                        ease: 'power3.out',
+                    });
+                }
 
-            // ----------------------------------------
-            // 4. GSAP ScrollTrigger — Video Scrubbing
-            //    (Apple-style scroll-driven animation)
-            // ----------------------------------------
-            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && scrollVideo) {
-                gsap.registerPlugin(ScrollTrigger);
+                // Video scrubbing
+                if (typeof ScrollTrigger !== 'undefined' && scrollVideo) {
+                    scrollVideo.addEventListener('loadedmetadata', () => {
+                        const videoDuration = scrollVideo.duration;
+                        let targetTime = 0;
+                        let currentAnimTime = 0;
 
-                // Wait for video metadata to load
-                scrollVideo.addEventListener('loadedmetadata', () => {
-                    const videoDuration = scrollVideo.duration;
-
-                    // Smoothly interpolate currentTime with rAF
-                    let targetTime = 0;
-                    let currentAnimTime = 0;
-
-                    function updateVideoTime() {
-                        // Lerp for buttery smooth playback - increased multiplier for agility
-                        currentAnimTime += (targetTime - currentAnimTime) * 0.35;
-                        if (Math.abs(currentAnimTime - targetTime) > 0.01) {
-                            scrollVideo.currentTime = currentAnimTime;
+                        function updateVideoTime() {
+                            currentAnimTime += (targetTime - currentAnimTime) * 0.35;
+                            if (Math.abs(currentAnimTime - targetTime) > 0.01) {
+                                scrollVideo.currentTime = currentAnimTime;
+                            }
+                            requestAnimationFrame(updateVideoTime);
                         }
                         requestAnimationFrame(updateVideoTime);
-                    }
-                    requestAnimationFrame(updateVideoTime);
 
-                    // ScrollTrigger to scrub video
-                    ScrollTrigger.create({
-                        trigger: '#video',
-                        start: 'top top',
-                        end: 'bottom bottom',
-                        scrub: 0.1, // Small scrub delay instead of true for a bit more agility
-                        onUpdate: (self) => {
-                            targetTime = self.progress * videoDuration;
-                        },
-                    });
-
-                    // Animate overlay text in at ~40% scroll progress
-                    gsap.to('#videoText', {
-                        opacity: 1,
-                        y: 0,
-                        scale: 1.05,
-                        duration: 1,
-                        ease: 'power3.out',
-                        scrollTrigger: {
+                        ScrollTrigger.create({
                             trigger: '#video',
-                            start: '30% top',
-                            end: '50% top',
-                            scrub: true,
-                        },
-                    });
+                            start: 'top top',
+                            end: 'bottom bottom',
+                            scrub: 0.1,
+                            onUpdate: (self) => {
+                                targetTime = self.progress * videoDuration;
+                            },
+                        });
 
-                    gsap.to('#videoSub', {
-                        opacity: 1,
-                        y: 0,
-                        duration: 1,
-                        ease: 'power3.out',
-                        scrollTrigger: {
-                            trigger: '#video',
-                            start: '35% top',
-                            end: '55% top',
-                            scrub: true,
-                        },
-                    });
+                        gsap.to('#videoText', {
+                            opacity: 1,
+                            y: 0,
+                            scale: 1.05,
+                            duration: 1,
+                            ease: 'power3.out',
+                            scrollTrigger: {
+                                trigger: '#video',
+                                start: '30% top',
+                                end: '50% top',
+                                scrub: true,
+                            },
+                        });
 
-                    // Fade out overlay text near the end
-                    gsap.to(['#videoText', '#videoSub'], {
-                        opacity: 0,
-                        y: -30,
-                        scrollTrigger: {
-                            trigger: '#video',
-                            start: '70% top',
-                            end: '85% top',
-                            scrub: true,
-                        },
+                        gsap.to('#videoSub', {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1,
+                            ease: 'power3.out',
+                            scrollTrigger: {
+                                trigger: '#video',
+                                start: '35% top',
+                                end: '55% top',
+                                scrub: true,
+                            },
+                        });
+
+                        gsap.to(['#videoText', '#videoSub'], {
+                            opacity: 0,
+                            y: -30,
+                            scrollTrigger: {
+                                trigger: '#video',
+                                start: '70% top',
+                                end: '85% top',
+                                scrub: true,
+                            },
+                        });
                     });
-                });
+                }
             }
 
-            // ----------------------------------------
-            // 5. Smooth Scroll for Explore Button
-            // ----------------------------------------
-            const btnExplore = document.getElementById('btnExplore');
-            if (btnExplore) {
-                btnExplore.addEventListener('click', () => {
-                    document.getElementById('video').scrollIntoView({
-                        behavior: 'smooth',
-                    });
-                });
-            }
-
-            // ----------------------------------------
-            // 6. Play Button — Scroll to Video
-            // ----------------------------------------
-            const heroPlayBtn = document.getElementById('heroPlayBtn');
-            if (heroPlayBtn) {
-                heroPlayBtn.addEventListener('click', () => {
-                    document.getElementById('video').scrollIntoView({
-                        behavior: 'smooth',
-                    });
-                });
-            }
-
-            // ----------------------------------------
-            // 7. Use Cases (Bento Grid) Animations
-            // ----------------------------------------
-            if (typeof gsap !== 'undefined') {
-                gsap.from('.bento-card', {
-                    scrollTrigger: {
-                        trigger: '.bento-grid',
-                        start: 'top 85%',
-                        toggleActions: 'play none none none',
-                    },
-                    y: 60,
-                    opacity: 0,
-                    duration: 1,
-                    stagger: 0.15,
-                    ease: 'power3.out',
-                });
+            // Defer GSAP setup to requestIdleCallback so it never blocks FCP/LCP or causes load reflow
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => initGSAPAnimations(), { timeout: 1500 });
+            } else {
+                setTimeout(initGSAPAnimations, 300);
             }
 
         });
