@@ -183,6 +183,14 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
             opacity: 1;
         }
 
+        /* Core Web Vitals: Ensure above-the-fold Hero content is visible immediately for LCP */
+        .hero .text-reveal-content,
+        .hero .reveal {
+            opacity: 1 !important;
+            transform: none !important;
+            visibility: visible !important;
+        }
+
         .hero-title {
             font-size: clamp(3rem, 6vw, 5.5rem);
             font-weight: 600;
@@ -494,10 +502,15 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
         .reveal.delay-300 { transition-delay: 300ms; }
         .reveal.delay-400 { transition-delay: 400ms; }
         .reveal.delay-500 { transition-delay: 500ms; }
-        
-        .hero {delay: 0.5s; }
         .delay-600 { transition-delay: 0.6s; }
         .delay-700 { transition-delay: 0.7s; }
+
+        /* Never hide above-the-fold Hero content — required for LCP & mobile speed */
+        .hero .reveal {
+            opacity: 1 !important;
+            transform: none !important;
+            will-change: auto;
+        }
 
         /* =============================================
            GRID BACKGROUND (from Design System)
@@ -1715,24 +1728,18 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
 
             // Nav entrance
             if (nav) {
-                setTimeout(() => {
-                    nav.classList.add('loaded');
-                }, 200);
+                nav.classList.add('loaded');
             }
 
             // Hero title text reveal
             if (heroTitle) {
-                setTimeout(() => {
-                    heroTitle.classList.add('reveal-active');
-                }, 400);
+                heroTitle.classList.add('reveal-active');
             }
 
-            // Trigger all hero reveal elements
-            setTimeout(() => {
-                document.querySelectorAll('.hero .reveal').forEach(el => {
-                    el.classList.add('active');
-                });
-            }, 600);
+            // Trigger all hero reveal elements immediately for fast LCP
+            document.querySelectorAll('.hero .reveal').forEach(el => {
+                el.classList.add('active');
+            });
 
             // ----------------------------------------
             // 2. Intersection Observer for Reveals
@@ -1880,88 +1887,92 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
             // ----------------------------------------
             // 3. Scroll Progress Bar
             // ----------------------------------------
-            window.addEventListener('scroll', () => {
-                const scrollTop = window.scrollY;
-                const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                const scrollPercent = (scrollTop / docHeight) * 100;
-                scrollProgress.style.width = scrollPercent + '%';
-            });
+            if (scrollProgress) {
+                window.addEventListener('scroll', () => {
+                    const scrollTop = window.scrollY;
+                    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+                    const scrollPercent = (scrollTop / docHeight) * 100;
+                    scrollProgress.style.width = scrollPercent + '%';
+                });
+            }
 
             // ----------------------------------------
             // 4. GSAP ScrollTrigger — Video Scrubbing
             //    (Apple-style scroll-driven animation)
             // ----------------------------------------
-            gsap.registerPlugin(ScrollTrigger);
+            if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && scrollVideo) {
+                gsap.registerPlugin(ScrollTrigger);
 
-            // Wait for video metadata to load
-            scrollVideo.addEventListener('loadedmetadata', () => {
-                const videoDuration = scrollVideo.duration;
+                // Wait for video metadata to load
+                scrollVideo.addEventListener('loadedmetadata', () => {
+                    const videoDuration = scrollVideo.duration;
 
-                // Smoothly interpolate currentTime with rAF
-                let targetTime = 0;
-                let currentAnimTime = 0;
+                    // Smoothly interpolate currentTime with rAF
+                    let targetTime = 0;
+                    let currentAnimTime = 0;
 
-                function updateVideoTime() {
-                    // Lerp for buttery smooth playback - increased multiplier for agility
-                    currentAnimTime += (targetTime - currentAnimTime) * 0.35;
-                    if (Math.abs(currentAnimTime - targetTime) > 0.01) {
-                        scrollVideo.currentTime = currentAnimTime;
+                    function updateVideoTime() {
+                        // Lerp for buttery smooth playback - increased multiplier for agility
+                        currentAnimTime += (targetTime - currentAnimTime) * 0.35;
+                        if (Math.abs(currentAnimTime - targetTime) > 0.01) {
+                            scrollVideo.currentTime = currentAnimTime;
+                        }
+                        requestAnimationFrame(updateVideoTime);
                     }
                     requestAnimationFrame(updateVideoTime);
-                }
-                requestAnimationFrame(updateVideoTime);
 
-                // ScrollTrigger to scrub video
-                ScrollTrigger.create({
-                    trigger: '#video',
-                    start: 'top top',
-                    end: 'bottom bottom',
-                    scrub: 0.1, // Small scrub delay instead of true for a bit more agility
-                    onUpdate: (self) => {
-                        targetTime = self.progress * videoDuration;
-                    },
-                });
-
-                // Animate overlay text in at ~40% scroll progress
-                gsap.to('#videoText', {
-                    opacity: 1,
-                    y: 0,
-                    scale: 1.05,
-                    duration: 1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
+                    // ScrollTrigger to scrub video
+                    ScrollTrigger.create({
                         trigger: '#video',
-                        start: '30% top',
-                        end: '50% top',
-                        scrub: true,
-                    },
-                });
+                        start: 'top top',
+                        end: 'bottom bottom',
+                        scrub: 0.1, // Small scrub delay instead of true for a bit more agility
+                        onUpdate: (self) => {
+                            targetTime = self.progress * videoDuration;
+                        },
+                    });
 
-                gsap.to('#videoSub', {
-                    opacity: 1,
-                    y: 0,
-                    duration: 1,
-                    ease: 'power3.out',
-                    scrollTrigger: {
-                        trigger: '#video',
-                        start: '35% top',
-                        end: '55% top',
-                        scrub: true,
-                    },
-                });
+                    // Animate overlay text in at ~40% scroll progress
+                    gsap.to('#videoText', {
+                        opacity: 1,
+                        y: 0,
+                        scale: 1.05,
+                        duration: 1,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: '#video',
+                            start: '30% top',
+                            end: '50% top',
+                            scrub: true,
+                        },
+                    });
 
-                // Fade out overlay text near the end
-                gsap.to(['#videoText', '#videoSub'], {
-                    opacity: 0,
-                    y: -30,
-                    scrollTrigger: {
-                        trigger: '#video',
-                        start: '70% top',
-                        end: '85% top',
-                        scrub: true,
-                    },
+                    gsap.to('#videoSub', {
+                        opacity: 1,
+                        y: 0,
+                        duration: 1,
+                        ease: 'power3.out',
+                        scrollTrigger: {
+                            trigger: '#video',
+                            start: '35% top',
+                            end: '55% top',
+                            scrub: true,
+                        },
+                    });
+
+                    // Fade out overlay text near the end
+                    gsap.to(['#videoText', '#videoSub'], {
+                        opacity: 0,
+                        y: -30,
+                        scrollTrigger: {
+                            trigger: '#video',
+                            start: '70% top',
+                            end: '85% top',
+                            scrub: true,
+                        },
+                    });
                 });
-            });
+            }
 
             // ----------------------------------------
             // 5. Smooth Scroll for Explore Button
