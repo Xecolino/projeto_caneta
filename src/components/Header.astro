@@ -4,20 +4,20 @@
 <header class="nav" id="mainNav" transition:persist>
     <nav class="nav-inner">
         <!-- Brand -->
-        <div class="nav-brand">
+        <a href="/" class="nav-brand">
             <div class="nav-brand-icon">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             <span>ARTOOLS</span>
-        </div>
+        </a>
 
         <!-- Desktop Links -->
         <ul class="nav-links">
             <li><a href="/" class="nav-item">INÍCIO</a></li>
-            <li><a href="/nova-pagina" class="nav-item">CATÁLAGO</a></li>
-            <li><a href="#beneficios" class="nav-item">DETALHES DO PRODUTO</a></li>
+            <li><a href="/catalogo" class="nav-item">CATÁLOGO</a></li>
+            <li><a href="/#beneficios" class="nav-item">DETALHES DO PRODUTO</a></li>
         </ul>
 
         <!-- Right side: Theme Toggle + Hamburger -->
@@ -43,14 +43,14 @@
 <!-- Mobile Menu Panel -->
 <nav class="mobile-menu" id="mobileMenu" aria-label="Menu mobile" transition:persist>
     <div class="mobile-menu-header">
-        <div class="nav-brand">
+        <a href="/" class="nav-brand">
             <div class="nav-brand-icon">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </div>
             <span>ARTOOLS</span>
-        </div>
+        </a>
         <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Fechar menu">
             <iconify-icon icon="solar:close-circle-line-duotone" style="font-size: 1.5rem;"></iconify-icon>
         </button>
@@ -58,8 +58,8 @@
 
     <ul class="mobile-menu-links">
         <li style="--i: 0"><a href="/" class="mobile-menu-link">INÍCIO</a></li>
-        <li style="--i: 1"><a href="/nova-pagina" class="mobile-menu-link">CATÁLAGO</a></li>
-        <li style="--i: 2"><a href="#beneficios" class="mobile-menu-link">DETALHES DO PRODUTO</a></li>
+        <li style="--i: 1"><a href="/catalogo" class="mobile-menu-link">CATÁLOGO</a></li>
+        <li style="--i: 2"><a href="/#beneficios" class="mobile-menu-link">DETALHES DO PRODUTO</a></li>
     </ul>
 
     <div class="mobile-menu-footer">
@@ -110,6 +110,7 @@
         align-items: center;
         gap: 0.5rem;
         cursor: pointer;
+        text-decoration: none;
     }
 
     .nav-brand-icon {
