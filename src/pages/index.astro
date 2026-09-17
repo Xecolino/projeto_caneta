@@ -1712,6 +1712,10 @@ import artistWorkspace3 from '../assets/artist_workspace_3.jpg';
     ========================================= -->
     <script is:inline>
         document.addEventListener('astro:page-load', () => {
+            // Only execute home page script if on home page
+            const hero = document.getElementById('hero');
+            if (!hero) return;
+
             const loader = document.getElementById('loader');
             const nav = document.getElementById('mainNav');
             const heroTitle = document.getElementById('heroTitle');

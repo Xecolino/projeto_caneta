@@ -438,99 +438,103 @@
 </style>
 
 <script is:inline>
-    // Mobile menu toggle logic
-    (function initHeader() {
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
-        const mobileMenuClose = document.getElementById('mobileMenuClose');
-        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
-
+    // Bulletproof Mobile Menu (HUB) with global event delegation
+    (function setupMobileMenu() {
         function openMenu() {
-            hamburgerBtn.classList.add('active');
-            hamburgerBtn.setAttribute('aria-expanded', 'true');
-            mobileMenu.classList.add('active');
-            mobileMenuOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeMenu() {
-            hamburgerBtn.classList.remove('active');
-            hamburgerBtn.setAttribute('aria-expanded', 'false');
-            mobileMenu.classList.remove('active');
-            mobileMenuOverlay.classList.remove('active');
-            document.body.style.overflow = '';
-
-            // Reset link animations for re-entry
-            mobileMenu.querySelectorAll('.mobile-menu-links li').forEach(li => {
-                li.style.opacity = '0';
-                li.style.transform = 'translateX(30px)';
-            });
-
-            // Re-enable animation after transition
-            setTimeout(() => {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            if (hamburgerBtn) {
+                hamburgerBtn.classList.add('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'true');
+            }
+            if (mobileMenu) {
+                mobileMenu.classList.add('active');
+                // Ensure link animations reset cleanly
                 mobileMenu.querySelectorAll('.mobile-menu-links li').forEach(li => {
                     li.style.opacity = '';
                     li.style.transform = '';
                 });
-            }, 500);
-        }
-
-        if (hamburgerBtn && !hamburgerBtn._headerBound) {
-            hamburgerBtn._headerBound = true;
-
-            hamburgerBtn.addEventListener('click', () => {
-                if (mobileMenu.classList.contains('active')) {
-                    closeMenu();
-                } else {
-                    openMenu();
-                }
-            });
-
-            if (mobileMenuClose) {
-                mobileMenuClose.addEventListener('click', closeMenu);
             }
-
             if (mobileMenuOverlay) {
-                mobileMenuOverlay.addEventListener('click', closeMenu);
+                mobileMenuOverlay.classList.add('active');
             }
-
-            // Close menu when clicking on a link
-            mobileMenuLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    closeMenu();
-                });
-            });
-
-            // Close menu on Escape key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && mobileMenu.classList.contains('active')) {
-                    closeMenu();
-                }
-            });
-
-            // Close menu on resize to desktop
-            window.addEventListener('resize', () => {
-                if (window.innerWidth > 1024 && mobileMenu.classList.contains('active')) {
-                    closeMenu();
-                }
-            });
+            document.body.style.overflow = 'hidden';
         }
 
-        // ----------------------------------------
-        // View Transitions support
-        // ----------------------------------------
-        // Close mobile menu before page swap so it doesn't stay open on new page
-        document.addEventListener('astro:before-preparation', () => {
-            if (mobileMenu && mobileMenu.classList.contains('active')) {
-                closeMenu();
+        function closeMenu() {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const mobileMenu = document.getElementById('mobileMenu');
+            const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+            if (hamburgerBtn) {
+                hamburgerBtn.classList.remove('active');
+                hamburgerBtn.setAttribute('aria-expanded', 'false');
             }
-        });
+            if (mobileMenu) {
+                mobileMenu.classList.remove('active');
+            }
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.classList.remove('active');
+            }
+            document.body.style.overflow = '';
+        }
 
-        // Ensure the nav stays visible after View Transitions swap
-        document.addEventListener('astro:after-swap', () => {
-            const nav = document.getElementById('mainNav');
-            if (nav) nav.classList.add('loaded');
-        });
+        // Attach global listeners only once to document
+        if (!window.__artoolsHeaderDelegation) {
+            window.__artoolsHeaderDelegation = true;
+
+            document.addEventListener('click', (e) => {
+                // Click on hamburger button
+                const hamburger = e.target.closest('#hamburgerBtn');
+                if (hamburger) {
+                    e.preventDefault();
+                    const mobileMenu = document.getElementById('mobileMenu');
+                    if (mobileMenu && mobileMenu.classList.contains('active')) {
+                        closeMenu();
+                    } else {
+                        openMenu();
+                    }
+                    return;
+                }
+
+                // Click on close button or overlay
+                if (e.target.closest('#mobileMenuClose') || e.target.closest('#mobileMenuOverlay')) {
+                    e.preventDefault();
+                    closeMenu();
+                    return;
+                }
+
+                // Click on any link in mobile menu
+                if (e.target.closest('.mobile-menu-link')) {
+                    closeMenu();
+                }
+            });
+
+            // Close on Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeMenu();
+                }
+            });
+
+            // Close on desktop resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > 1024) {
+                    closeMenu();
+                }
+            });
+
+            // Close menu before View Transitions swap
+            document.addEventListener('astro:before-preparation', () => {
+                closeMenu();
+            });
+
+            // Ensure header is loaded and visible on every page load/swap
+            document.addEventListener('astro:page-load', () => {
+                closeMenu();
+                const nav = document.getElementById('mainNav');
+                if (nav) nav.classList.add('loaded');
+            });
+        }
     })();
 </script>

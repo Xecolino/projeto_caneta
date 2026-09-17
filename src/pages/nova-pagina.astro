@@ -153,13 +153,9 @@ import ProductCard from '../components/ProductCard.astro';
     .catalog-header {
         text-align: left;
         margin-bottom: 2rem;
-        padding: 1rem 0;
-        position: sticky;
-        top: 70px; /* Logo nav is ~70px tall */
-        z-index: 900;
-        background: rgba(255, 255, 255, 0.85);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
+        padding: 1.5rem 0 1rem;
+        position: relative;
+        z-index: 1;
         border-bottom: 1px solid var(--border-light);
     }
 
@@ -179,8 +175,31 @@ import ProductCard from '../components/ProductCard.astro';
     }
 
     .catalog-grid {
+        position: relative;
+        z-index: 2;
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
         gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+        .catalog-page {
+            padding: 85px 1.25rem 4rem;
+        }
+
+        .catalog-header {
+            position: relative;
+            top: auto;
+            z-index: 1;
+            padding: 0.5rem 0 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .catalog-grid {
+            position: relative;
+            z-index: 10;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
     }
 </style>
