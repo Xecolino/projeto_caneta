@@ -25,11 +25,11 @@ const { productTitle } = Astro.props;
         <form class="notify-form" id="notify-form">
             <div class="form-group">
                 <label for="email">E-mail</label>
-                <input type="email" id="email" placeholder="seu.email@exemplo.com" required />
+                <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" required />
             </div>
             <div class="form-group">
                 <label for="name">Nome (Opcional)</label>
-                <input type="text" id="name" placeholder="Seu nome" />
+                <input type="text" id="name" name="nome" placeholder="Seu nome" />
             </div>
             <button type="submit" class="submit-btn">Cadastrar Notificação</button>
         </form>
@@ -183,6 +183,9 @@ const { productTitle } = Astro.props;
 
 <script is:inline>
     (function() {
+        /* ─── Google Sheets — URL do Apps Script ───────────────────────── */
+        var SHEETS_URL = 'https://script.google.com/macros/s/AKfycbw6oTaY4q5PJ0C6_bmkuqfn10EHlNdqNBckxzSwt_U3UsHh_c-c5AhiYv4TpJPLQQmm/exec';
+
 
         /* ─── Analytics helpers ─────────────────────────────────────── */
         function trackModalOpen() {
@@ -260,10 +263,27 @@ const { productTitle } = Astro.props;
             }
 
             if (form) {
-                form.onsubmit = (e) => {
+                form.onsubmit = async (e) => {
                     e.preventDefault();
-                    const email = form.querySelector('#email')?.value || '';
-                    trackFormSubmit(email);
+                    const emailVal = form.querySelector('#email')?.value || '';
+                    const nomeVal  = form.querySelector('#name')?.value  || '';
+
+                    // 1. Envia para o Google Sheets
+                    try {
+                        await fetch(SHEETS_URL, {
+                            method: 'POST',
+                            mode: 'no-cors',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: emailVal, nome: nomeVal })
+                        });
+                    } catch (err) {
+                        console.warn('[StockModal] Sheets send failed:', err);
+                    }
+
+                    // 2. Dispara eventos de analytics
+                    trackFormSubmit(emailVal);
+
+                    // 3. Fecha o modal e reseta o form
                     closeModal();
                     alert('Notificação cadastrada com sucesso!');
                     form.reset();
