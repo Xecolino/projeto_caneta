@@ -22,7 +22,7 @@ const { productTitle } = Astro.props;
             Informe seu e-mail para receber uma notificação assim que o modelo <strong>{productTitle}</strong> estiver disponível.
         </p>
 
-        <form class="notify-form" onsubmit="event.preventDefault(); const m = document.getElementById('notify-modal'); if (m) { m.classList.remove('active'); m.setAttribute('aria-hidden', 'true'); } alert('Notificação cadastrada com sucesso!'); this.reset();">
+        <form class="notify-form" id="notify-form">
             <div class="form-group">
                 <label for="email">E-mail</label>
                 <input type="email" id="email" placeholder="seu.email@exemplo.com" required />
@@ -183,6 +183,37 @@ const { productTitle } = Astro.props;
 
 <script is:inline>
     (function() {
+
+        /* ─── Analytics helpers ─────────────────────────────────────── */
+        function trackModalOpen() {
+            // Meta Pixel — Lead (interesse no produto)
+            if (typeof fbq === 'function') {
+                fbq('track', 'Lead', { content_name: 'Avise-me quando disponível' });
+            }
+            // Google Analytics 4 — generate_lead
+            if (typeof gtag === 'function') {
+                gtag('event', 'generate_lead', { event_category: 'engagement', event_label: 'notify_btn' });
+            }
+        }
+
+        function trackFormSubmit(email) {
+            // Meta Pixel — CompleteRegistration (cadastro na lista de espera)
+            if (typeof fbq === 'function') {
+                fbq('track', 'CompleteRegistration', {
+                    content_name: 'Lista de espera - Avise-me',
+                    status: true
+                });
+            }
+            // Google Analytics 4 — sign_up
+            if (typeof gtag === 'function') {
+                gtag('event', 'sign_up', {
+                    method: 'notify_form',
+                    event_label: 'waitlist'
+                });
+            }
+        }
+
+        /* ─── Modal logic ───────────────────────────────────────────── */
         function openModal() {
             const modal = document.getElementById('notify-modal');
             if (modal) {
@@ -190,6 +221,7 @@ const { productTitle } = Astro.props;
                 modal.setAttribute('aria-hidden', 'false');
                 const emailInput = modal.querySelector('#email');
                 if (emailInput) setTimeout(() => emailInput.focus(), 80);
+                trackModalOpen();
             }
         }
 
@@ -205,6 +237,7 @@ const { productTitle } = Astro.props;
             const notifyBtn = document.getElementById('notify-btn');
             const modal = document.getElementById('notify-modal');
             const closeBtn = document.getElementById('modal-close-btn');
+            const form = document.getElementById('notify-form');
 
             if (notifyBtn) {
                 notifyBtn.onclick = (e) => {
@@ -222,9 +255,18 @@ const { productTitle } = Astro.props;
 
             if (modal) {
                 modal.onclick = (e) => {
-                    if (e.target === modal) {
-                        closeModal();
-                    }
+                    if (e.target === modal) closeModal();
+                };
+            }
+
+            if (form) {
+                form.onsubmit = (e) => {
+                    e.preventDefault();
+                    const email = form.querySelector('#email')?.value || '';
+                    trackFormSubmit(email);
+                    closeModal();
+                    alert('Notificação cadastrada com sucesso!');
+                    form.reset();
                 };
             }
         }
@@ -264,9 +306,7 @@ const { productTitle } = Astro.props;
             });
 
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeModal();
-                }
+                if (e.key === 'Escape') closeModal();
             });
         }
     })();
