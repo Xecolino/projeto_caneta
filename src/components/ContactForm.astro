@@ -1,0 +1,270 @@
+---
+// src/components/ContactForm.astro
+---
+
+<section class="contact-section">
+  <form id="contact-form" class="contact-form" novalidate>
+    <div class="form-group">
+      <label for="cf-nome">Nome completo</label>
+      <input
+        type="text"
+        id="cf-nome"
+        name="nome"
+        required
+        placeholder="Ex: Maria Silva"
+        autocomplete="name"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="cf-email">E-mail</label>
+      <input
+        type="email"
+        id="cf-email"
+        name="email"
+        required
+        placeholder="Ex: maria@email.com"
+        autocomplete="email"
+      />
+    </div>
+
+    <button type="submit" id="cf-submit-btn" class="cf-submit-btn">
+      <span class="btn-text">Enviar Cadastro</span>
+      <span class="btn-loader" aria-hidden="true"></span>
+    </button>
+
+    <p id="cf-status" class="cf-status" role="status" aria-live="polite"></p>
+  </form>
+</section>
+
+<style>
+  .contact-section {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    background: var(--bg-subtle, #FAFAFA);
+    border: 1px solid var(--border-light, #E7E5E4);
+    border-radius: var(--radius-lg, 1rem);
+    padding: 2.5rem;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .form-group label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted, #A8A29E);
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 1px solid var(--border-light, #E7E5E4);
+    border-radius: var(--radius-sm, 0.375rem);
+    background: var(--bg-main, #FFFFFF);
+    font-family: var(--font-sans, sans-serif);
+    font-size: 1rem;
+    color: var(--text-primary, #1C1C1C);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-sizing: border-box;
+  }
+
+  .form-group input::placeholder {
+    color: var(--text-faint, #D6D3D1);
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--primary-dark, #1C1917);
+    box-shadow: 0 0 0 3px rgba(28, 25, 23, 0.06);
+  }
+
+  .form-group input.input-error {
+    border-color: #DC2626;
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08);
+  }
+
+  /* ─── Submit Button ─── */
+  .cf-submit-btn {
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-dark, #1C1917);
+    color: #FFFFFF;
+    border: none;
+    border-radius: var(--radius-sm, 0.375rem);
+    font-family: var(--font-sans, sans-serif);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: background 0.2s ease, opacity 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 52px;
+  }
+
+  .cf-submit-btn:hover:not(:disabled) {
+    background: #000000;
+  }
+
+  .cf-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Spinner */
+  .btn-loader {
+    display: none;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: cf-spin 0.7s linear infinite;
+  }
+
+  .cf-submit-btn.loading .btn-text {
+    opacity: 0.6;
+  }
+
+  .cf-submit-btn.loading .btn-loader {
+    display: block;
+  }
+
+  @keyframes cf-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* ─── Status message ─── */
+  .cf-status {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-align: center;
+    min-height: 1.25rem;
+    transition: color 0.2s ease;
+  }
+
+  .cf-status:empty {
+    display: none;
+  }
+
+  .cf-status.success {
+    color: #16A34A;
+  }
+
+  .cf-status.error {
+    color: #DC2626;
+  }
+
+  .cf-status.loading {
+    color: var(--text-muted, #A8A29E);
+  }
+</style>
+
+<script>
+  // ─── CONFIGURAÇÃO ──────────────────────────────────────────────────────────
+  // Cole aqui a URL gerada no Google Apps Script (Publicar → Implantar como app da Web)
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw6oTaY4q5PJ0C6_bmkuqfn10EHlNdqNBckxzSwt_U3UsHh_c-c5AhiYv4TpJPLQQmm/exec";
+  // ──────────────────────────────────────────────────────────────────────────
+
+  function initContactForm() {
+    const form = document.getElementById("contact-form") as HTMLFormElement | null;
+    const statusEl = document.getElementById("cf-status") as HTMLParagraphElement | null;
+    const submitBtn = document.getElementById("cf-submit-btn") as HTMLButtonElement | null;
+
+    if (!form || !statusEl || !submitBtn) return;
+
+    // Evita registrar o listener múltiplas vezes nas View Transitions
+    if ((form as any).__cfInitialized) return;
+    (form as any).__cfInitialized = true;
+
+    function setStatus(msg: string, type: "success" | "error" | "loading" | "") {
+      if (!statusEl) return;
+      statusEl.textContent = msg;
+      statusEl.className = "cf-status" + (type ? ` ${type}` : "");
+    }
+
+    function setLoading(loading: boolean) {
+      if (!submitBtn) return;
+      submitBtn.disabled = loading;
+      submitBtn.classList.toggle("loading", loading);
+    }
+
+    function validateForm(): boolean {
+      let valid = true;
+
+      form.querySelectorAll("input[required]").forEach((el) => {
+        const input = el as HTMLInputElement;
+        input.classList.remove("input-error");
+        if (!input.value.trim() || (input.type === "email" && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value))) {
+          input.classList.add("input-error");
+          valid = false;
+        }
+      });
+
+      return valid;
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      if (!validateForm()) {
+        setStatus("Preencha todos os campos corretamente.", "error");
+        return;
+      }
+
+      setLoading(true);
+      setStatus("Enviando dados...", "loading");
+
+      const formData = new FormData(form);
+      const data: Record<string, string> = {};
+      formData.forEach((value, key) => { data[key] = value.toString(); });
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          // no-cors é necessário para o Google Apps Script sem CORS configurado
+          // A resposta não pode ser lida, mas o envio ocorre normalmente
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        });
+
+        setStatus("✓ Cadastro realizado com sucesso!", "success");
+        form.reset();
+        form.querySelectorAll("input").forEach(i => i.classList.remove("input-error"));
+
+      } catch {
+        setStatus("Erro ao enviar. Verifique sua conexão e tente novamente.", "error");
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // Remove erro visual ao usuário começar a digitar
+    form.querySelectorAll("input").forEach((el) => {
+      el.addEventListener("input", () => (el as HTMLInputElement).classList.remove("input-error"));
+    });
+  }
+
+  // Inicializa na carga normal e nas View Transitions do Astro
+  document.addEventListener("astro:page-load", initContactForm);
+  initContactForm();
+</script>
